@@ -1,0 +1,17 @@
+{
+  "name": "proj_electron",
+  "version": "1.0.0",
+  "description": "bachelor_project: visualizing a*",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "electron .",
+    "pack": "electron-packager .",
+    "test": "echo \"ERROR: no test specified\" && exit 1"
+  },
+  "author": "Silas Irmisch",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^21.1.0",
+    "electron-packager": "^16.0.0"
+  }
+}
