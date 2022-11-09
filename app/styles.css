@@ -22,11 +22,11 @@ a {
 }
 
 .grid_container {
-	width: 100vh;
+	width: 100vw;
 }
 
 .pseudo_container {
-	width: 80vh;
+	width: 80vw;
 }
 
 .grid {
@@ -45,6 +45,15 @@ a {
 	width: 36px;
 	background-color: #BBBBBB;
 	border: 1px solid #BBBBBB;
+	font-size: 35px;
+
+	/* https://stackoverflow.com/a/2310809 */
+	-webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 canvas {
@@ -52,33 +61,3 @@ canvas {
 	z-index: 3;
 	pointer-events: none;
 }
-
-/* .line_hor {
-	width: 40px;
-	height: 10px;
-	border-top: 4px solid #00ff80;
-	-webkit-transform:
-		translateX(20px)
-		translateY(20px)
-		rotate(0deg);
-	position: absolute;
-}
-
-.line_ver {
-	width: 40px;
-	height: 10px;
-	border-top: 4px solid #00ff80;
-	-webkit-transform:
-		translateX(48px)
-		translateY(32px)
-		rotate(270deg); 
-	position: absolute;
-}
-
-.line {
-	display: block;
-	width: 40px;
-	height: 10px;
-	border-top: 4px solid #00ff80;
-	position: absolute;
-} */

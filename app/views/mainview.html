@@ -17,20 +17,26 @@
 			<!-- Right Side -->
 			<div class="pseudo_container">
 				<button id="toggle_editingmode" onclick="toggleEditingMode()">DONE</button>
-				<div id="weight_choice">
-					<input type="radio" id="w1" name="weight_choice_elements" onclick="weightChoice(this)" checked/>
+				
+				<div id="edit_ui">
+					<input type="radio" id="w1" name="choice_elements" onclick="radioButtonChoice(this)"/>
 					<label for="w1">Weight1</label> <br>
-					<input type="radio" id="w2" name="weight_choice_elements" onclick="weightChoice(this)"/>
+					<input type="radio" id="w2" name="choice_elements" onclick="radioButtonChoice(this)"/>
 					<label for="w2">Weight2</label> <br>
-					<input type="radio" id="w3" name="weight_choice_elements" onclick="weightChoice(this)"/>
+					<input type="radio" id="w3" name="choice_elements" onclick="radioButtonChoice(this)"/>
 					<label for="w3">Weight3</label> <br>
-					<input type="radio" id="w4" name="weight_choice_elements" onclick="weightChoice(this)"/>
+					<input type="radio" id="w4" name="choice_elements" onclick="radioButtonChoice(this)"/>
 					<label for="w4">Weight4</label> <br>
-					<input type="radio" id="w5" name="weight_choice_elements" onclick="weightChoice(this)"/>
-					<label for="w5">Wand</label> <br>
+					<input type="radio" id="wall" name="choice_elements" onclick="radioButtonChoice(this)"/>
+					<label for="wall">Wall</label> <br>
+					<input type="radio" id="start" name="choice_elements" onclick="radioButtonChoice(this)"/>
+					<label for="start">START</label> <br>
+					<input type="radio" id="end" name="choice_elements" onclick="radioButtonChoice(this)"/>
+					<label for="end">END</label> <br>
 				</div>
+				
 				<br>
-				<button>NEXT</button>
+				<button onclick="submitGraph()">NEXT</button>
 				<br><br>
 				- pseudocode etc -
 			</div>
