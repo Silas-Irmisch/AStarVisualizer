@@ -1,1 +1,2 @@
-# PROJ_ELECTRON
+PROJECT: Visualizing A*
+by Silas Irmisch
