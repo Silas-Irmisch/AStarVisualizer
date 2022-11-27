@@ -1,2 +1,2 @@
-PROJECT: Visualizing A*
+PROJECT: Visualizing A*  
 by Silas Irmisch
