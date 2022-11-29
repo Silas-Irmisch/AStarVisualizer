@@ -11,7 +11,10 @@
   "author": "Silas Irmisch",
   "license": "",
   "devDependencies": {
-    "electron": "^21.1.0",
+    "electron": "^6.1.12",
     "electron-packager": "^16.0.0"
+  },
+  "dependencies": {
+    "linked-list": "^3.1.0"
   }
 }
