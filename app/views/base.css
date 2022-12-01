@@ -1,0 +1,67 @@
+/* DEBUGGING OUTLINE */
+/* * {
+	outline: red solid 1px;
+} */
+
+body, html {
+	background-color: #29293b;
+	font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+	font-size: 14px;
+}
+
+a {
+	color: #70f3ec;
+	text-decoration: none;
+}
+
+.left_container {
+	height: 450px;
+
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	justify-content: space-around;
+}
+
+.grid_container {
+	width: 100vw;
+}
+
+.right_container {
+	width: 80vw;
+}
+
+.right_container ul {
+	list-style: none;
+	padding: 0 0 0 10px;
+	margin: 0;
+}
+
+.right_container ul li {
+	display: inline;
+}
+
+.tab-button {
+	border: none;
+	background: none;
+	color: #ECECEC;
+	outline: 0;
+}
+
+.selected {
+	border: 2px solid;
+	border-color: #BBBBBB;
+	border-radius: 4px 4px 0 0;
+	color: #161616;
+	background: #BBBBBB;
+}
+
+.tab {
+	width: 95%;
+	height: 370px;
+	background: #BBBBBB;
+	margin-bottom: 5px;
+	padding: 10px;
+	border-radius: 4px;
+	color: #161616
+}

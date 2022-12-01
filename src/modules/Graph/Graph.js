@@ -1,7 +1,7 @@
 /** 	Graph Class
  *  	Purpose: bachelor thesis
  *  	Author: silas irmisch
- *  	Source: ripphausen
+ *  	Reference: ripphausen
  */
 
 /**
@@ -50,7 +50,7 @@ class Graph {
 				_vertexCount++
 			}
 
-			// Setting _adjList to right size and initializing LinkedLists
+			// Setting _adjList to correct size and initializing LinkedLists
 			for (let j = 0; j < _vertexCount; j++) _adjList[j] = new List()
 
 			// Add edges to _adjList
@@ -65,7 +65,7 @@ class Graph {
 				_adjList[vi1].append(e)
 			}
 
-			// If not directed: insert each edge in neighbourhood of vertex2
+			// If not directed: additionally insert each edge in neighbourhood of vertex2
 			if (!_isDirected) {
 				for (const e in edges) {
 					let vi2 = _vertexIndex.get(e._vertex2)

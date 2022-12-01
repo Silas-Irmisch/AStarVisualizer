@@ -1,7 +1,7 @@
 /** 	Edge Class of Graphs
  *  	Purpose: bachelor thesis
  *  	Author: silas irmisch
- *  	Source: ripphausen
+ *  	Reference: ripphausen
  */
 
 import V from './Vertex.js'
@@ -16,11 +16,10 @@ export default class Edge extends Item {
 	_weight
 
 	// @params: v1 as V, v2 as V, weight as float
-	constructor(v1, v2, weight) {
+	constructor(v1, v2, weight = 1.0) {
 		this._vertex1 = v1
 		this._vertex2 = v2
-		// set weight to param OR to 1; depends if param given
-		if (weight) this._weight = weight
-		else this._weight = 1
+		// set weight to param; else standard is 1
+		this._weight = weight
 	}
 }

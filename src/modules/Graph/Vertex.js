@@ -1,7 +1,7 @@
 /** 	Vertex Class of Graphs
  *  	Purpose: bachelor thesis
  *  	Author: silas irmisch
- *  	Source: ripphausen
+ *  	Reference: ripphausen
  */
 
 export default class Vertex {
