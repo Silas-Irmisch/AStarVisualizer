@@ -1,20 +1,21 @@
 {
-  "name": "AStarVisualizer",
-  "version": "1.0.0",
-  "description": "bachelor_project: visualizing a*",
-  "main": "src/main.js",
-  "scripts": {
-    "start": "electron .",
-    "build": "electron-packager . --platform=win32 --out=builds",
-    "test": "echo \"ERROR: no test specified\" && exit 1"
-  },
-  "author": "Silas Irmisch",
-  "license": "",
-  "devDependencies": {
-    "electron": "^6.1.12",
-    "electron-packager": "^16.0.0"
-  },
-  "dependencies": {
-    "linked-list": "^3.1.0"
-  }
+	"name": "AStarVisualizer",
+	"version": "1.0.0",
+	"description": "bachelor_project: visualizing a*",
+	"main": "src/main.js",
+	"scripts": {
+		"start": "electron .",
+		"dev": "electron . --dev",
+		"build": "electron-packager . --platform=win32 --out=builds",
+		"test": "echo \"ERROR: no test specified\" && exit 1"
+	},
+	"author": "Silas Irmisch",
+	"license": "",
+	"devDependencies": {
+		"electron": "^6.1.12",
+		"electron-packager": "^16.0.0"
+	},
+	"dependencies": {
+		"linked-list": "^3.1.0"
+	}
 }

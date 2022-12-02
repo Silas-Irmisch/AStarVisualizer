@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en-US">
+	<head>	
+		<meta charset="utf-8"/>
+		<title>A*</title>
+		<link rel="stylesheet" type="text/css" href="./base.css"/>
+		<link rel="stylesheet" type="text/css" href="./grid.css"/>
+	</head>
+	<body>
+		<!-- Page Content -->
+		<div class="left_container">
+			<!-- Left Side -->
+			<div class="grid_container">
+				<br>
+				<canvas width="400", height="400"></canvas>
+				<div id="grid" class="grid"></div>
+			</div>
+	
+			<!-- Right Side -->
+			<div class="right_container">
+				<!-- https://www.w3schools.com/w3css/w3css_tabulators.asp -->
+				<ul>
+					<li><button class="tab-button" onclick="selectTab('tab-pseudo')">Pseudo Code</button></li>
+					<li><button class="tab-button" onclick="selectTab('tab-explan')">A* Explanation</button></li>
+					<li><button class="tab-button selected" onclick="selectTab('tab-edit')">Edit</button></li>
+					<li><button class="tab-button" onclick="selectTab('tab-help')">Help</button></li>
+				</ul>
+				<div class="tab" id="tab-pseudo" style="display:none"> [PSEUDOCODE] </div>
+				<div class="tab" id="tab-explan" style="display:none">A* funktioniert so...</div>
+				<div class="tab" id="tab-help" style="display:none">How to use...</div>
+				<div class="tab" id="tab-edit">
+					<h3 style="display:inline"> EDITING INTERFACE</h3> &emsp; <button id="toggle_editingmode" onclick="toggleEditingMode()">I'm done!</button>
+					<br><br>
+					<div style="display:flex">
+						<div id="edit_ui" style="flex: 50%">
+							<input type="radio" id="w1" name="choice_elements" onclick="radioButtonChoice(this)" checked/>
+							<label id="w1_l" for="w1">1</label> <br>
+							<input type="radio" id="w2" name="choice_elements" onclick="radioButtonChoice(this)"/>
+							<label id="w2_l" for="w2">2</label> <br>
+							<input type="radio" id="w3" name="choice_elements" onclick="radioButtonChoice(this)"/>
+							<label id="w3_l" for="w3">3</label> <br>
+							<input type="radio" id="w4" name="choice_elements" onclick="radioButtonChoice(this)"/>
+							<label id="w4_l" for="w4">4</label> <br>
+							<input type="radio" id="wall" name="choice_elements" onclick="radioButtonChoice(this)"/>
+							<label for="wall">Wall</label> <br><br>
+							<input type="radio" id="start" name="choice_elements" onclick="radioButtonChoice(this)"/>
+							<label for="start">START</label> <br>
+							<input type="radio" id="end" name="choice_elements" onclick="radioButtonChoice(this)"/>
+							<label for="end">END</label> <br>
+						</div>
+						<div id="scale_ui" style="flex:50%">
+							<p>Weight Scale</p>
+							<input type="radio" id="preset1" name="preset_elements" onclick="radioButtonChoice(this)" checked/>
+							<label for="preset1">1, 2, 3, 4</label> <br>
+							<input type="radio" id="preset2" name="preset_elements" onclick="radioButtonChoice(this)"/>
+							<label for="preset2">1, 2, 4, 8</label> <br>
+							<input type="radio" id="preset3" name="preset_elements" onclick="radioButtonChoice(this)"/>
+							<label for="preset2">1, 3, 9, 21</label> <br>
+						</div>
+					</div>
+				</div>
+			
+				<button onclick="submitGraph()">NEXT STEP</button> 
+			</div>
+		</div>
+	</body>
+</html>
+
+<script src="./app.js"></script>
+<script src="./index.js"></script>

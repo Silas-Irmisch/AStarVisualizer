@@ -6,7 +6,7 @@
 	display: grid;
 	grid-template-columns: repeat(10, 1fr);
 	grid-template-rows: repeat(10, 1fr);
-	gap: 2px;
+	gap: 0;
 }
 
 .grid_cell {

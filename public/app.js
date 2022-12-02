@@ -15,15 +15,22 @@ const EDIT = {
 	WALL: 'WALL'
 }
 
+// defining Weight Scale preset values
+const SCALE = {
+	PRESET1: [1, 2, 3, 4],
+	PRESET2: [1, 2, 4, 8],
+	PRESET3: [1, 3, 9, 21]
+}
+
 // Const Settings: Gridsize and Colors
-const GRID_WIDTH = 11 // max 12
-const GRID_HEIGHT = 11 // max 12
-const ColorMap = new Map()
-ColorMap.set(EDIT.WEIGHT1, '#BBBBBB')
-ColorMap.set(EDIT.WEIGHT2, '#999999')
-ColorMap.set(EDIT.WEIGHT3, '#777777')
-ColorMap.set(EDIT.WEIGHT4, '#555555')
-ColorMap.set(EDIT.WALL, '#111111')
+const GRID_WIDTH = 10 // standard 10
+const GRID_HEIGHT = 10 // standard 10
+const COLORMAP = new Map()
+COLORMAP.set(EDIT.WEIGHT1, '#BBBBBB')
+COLORMAP.set(EDIT.WEIGHT2, '#999999')
+COLORMAP.set(EDIT.WEIGHT3, '#777777')
+COLORMAP.set(EDIT.WEIGHT4, '#555555')
+COLORMAP.set(EDIT.WALL, '#111111')
 
 // Canvas Setup, Global Canvas Settings
 var ctx = document.getElementsByTagName('canvas')[0].getContext('2d')
@@ -32,15 +39,16 @@ ctx.strokeStyle = '#FFFFFF'
 
 // Global Variables: Editing Mode
 var _editMode = true
-var _editChoice = EDIT.NONE
+var _editChoice = EDIT.WEIGHT1
 
-// saving data for ease of communication with backend
+// data to be sent to backend
 var _startLocation = null
 var _endLocation = null
+// _weights-Array initializing: 2D-Array containing weight-strings
 var _weights = Array(GRID_HEIGHT)
 for (let i = 0; i < GRID_HEIGHT; i++) _weights[i] = Array(GRID_WIDTH).fill(EDIT.WEIGHT1)
-// -> _weights-Array initialised: 2D-Array containing weight-strings
-
+// field with set weight values; initializing standard values 1,2,3,4
+var _weightScale = SCALE.PRESET1
 // -----------------------------------------------------------------------------------------------------------------
 
 // Grid Setup: find grid
@@ -59,8 +67,8 @@ for (let i = 0; i < GRID_WIDTH; i++) {
 		let newCell = document.createElement('div')
 		newCell.classList.add('grid_cell')
 		newCell.setAttribute('id', 'cell_' + i + '-' + j)
-		newCell.style.border = '1px solid' + ColorMap.get(EDIT.WEIGHT1)
-		newCell.style.background = ColorMap.get(EDIT.WEIGHT1)
+		newCell.style.border = '1px solid' + COLORMAP.get(EDIT.WEIGHT1)
+		newCell.style.background = COLORMAP.get(EDIT.WEIGHT1)
 
 		// Handlers: Editing-Phase coloring of cell
 		newCell.addEventListener('mousemove', event => {
@@ -86,9 +94,11 @@ function toggleEditingMode() {
 	if (_editMode) {
 		document.getElementById('toggle_editingmode').innerHTML = "I'm done!"
 		document.getElementById('edit_ui').style.display = 'block'
+		document.getElementById('scale_ui').style.display = 'block'
 	} else {
 		document.getElementById('toggle_editingmode').innerHTML = "Let's edit!"
 		document.getElementById('edit_ui').style.display = 'none'
+		document.getElementById('scale_ui').style.display = 'none'
 	}
 }
 
@@ -117,7 +127,24 @@ function radioButtonChoice(choiceHTMLObject) {
 		case 'end':
 			_editChoice = EDIT.END
 			break
+		case 'preset1':
+			_weightScale = SCALE.PRESET1
+			updateUI()
+			break
+		case 'preset2':
+			_weightScale = SCALE.PRESET2
+			updateUI()
+			break
+		case 'preset3':
+			_weightScale = SCALE.PRESET3
+			updateUI()
+			break
 	}
+}
+
+// updates the Weights listed in Editing Interface
+function updateUI() {
+	for (let i = 1; i <= 4; i++) document.getElementById('w' + i + '_l').innerHTML = _weightScale[i - 1]
 }
 
 // called by Clicking on Cell in Editing Phase
@@ -146,25 +173,25 @@ function setCellAttributes(cellName) {
 function applyWeightToCell(cell) {
 	switch (_editChoice) {
 		case EDIT.WEIGHT1:
-			cell.style.background = ColorMap.get(EDIT.WEIGHT1)
-			cell.style.borderColor = ColorMap.get(EDIT.WEIGHT1)
+			cell.style.background = COLORMAP.get(EDIT.WEIGHT1)
+			cell.style.borderColor = COLORMAP.get(EDIT.WEIGHT1)
 			break
 		case EDIT.WEIGHT2:
-			cell.style.background = ColorMap.get(EDIT.WEIGHT2)
-			cell.style.borderColor = ColorMap.get(EDIT.WEIGHT1)
+			cell.style.background = COLORMAP.get(EDIT.WEIGHT2)
+			cell.style.borderColor = COLORMAP.get(EDIT.WEIGHT1)
 			break
 		case EDIT.WEIGHT3:
-			cell.style.background = ColorMap.get(EDIT.WEIGHT3)
-			cell.style.borderColor = ColorMap.get(EDIT.WEIGHT1)
+			cell.style.background = COLORMAP.get(EDIT.WEIGHT3)
+			cell.style.borderColor = COLORMAP.get(EDIT.WEIGHT1)
 			break
 		case EDIT.WEIGHT4:
-			cell.style.background = ColorMap.get(EDIT.WEIGHT4)
-			cell.style.borderColor = ColorMap.get(EDIT.WEIGHT1)
+			cell.style.background = COLORMAP.get(EDIT.WEIGHT4)
+			cell.style.borderColor = COLORMAP.get(EDIT.WEIGHT1)
 			break
 		case EDIT.WALL:
 			if (cell.innerHTML !== '') return
-			cell.style.background = ColorMap.get(EDIT.WALL)
-			cell.style.borderColor = ColorMap.get(EDIT.WALL)
+			cell.style.background = COLORMAP.get(EDIT.WALL)
+			cell.style.borderColor = COLORMAP.get(EDIT.WALL)
 			break
 	}
 
@@ -177,7 +204,8 @@ function replaceStartOrEnd(cellName, s_e) {
 	for (const cell of document.getElementById('grid').children) {
 		if (cellName === cell.id) {
 			cell.innerHTML = s_e
-			_startLocation = cellName
+			if (s_e === 'S') _startLocation = cellName
+			else _endLocation = cellName
 		} else {
 			if (cell.innerHTML === s_e) cell.innerHTML = ''
 		}
@@ -185,13 +213,13 @@ function replaceStartOrEnd(cellName, s_e) {
 }
 
 // @params: cellName in String
-// @return: cell coordinate X
+// @return: cell coordinate X in String
 function cellX(cellName) {
 	return cellName.split('_')[1].split('-')[0]
 }
 
 // @params: cellName in String
-// @return: cell coordinate Y
+// @return: cell coordinate Y in String
 function cellY(cellName) {
 	return cellName.split('_')[1].split('-')[1]
 }
@@ -230,8 +258,8 @@ function submitGraph() {
 }
 
 // TESTING: calling functions
-drawLine(0, 0, 1, 0)
-drawLine(3, 3, 3, 4)
-colorCellBorder(1, 1, '#FF0000')
-colorCellBorder(3, 3, '#00FF00')
-colorCellBorder(5, 5, '#0000FF')
+// drawLine(0, 0, 1, 0)
+// drawLine(3, 3, 3, 4)
+// colorCellBorder(1, 1, '#FF0000')
+// colorCellBorder(3, 3, '#00FF00')
+// colorCellBorder(5, 5, '#0000FF')

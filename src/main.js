@@ -2,23 +2,11 @@
 // More Secure Approach (not in use!): https://stackoverflow.com/a/59888788
 
 // require elements of electron
-const {
-	app,
-	BrowserWindow
-	// Menu
-	// ipcMain,
-	// dialog
-} = require('electron')
+const { app, BrowserWindow, Menu, MenuItem, ipcMain } = require('electron')
 const path = require('path')
-// const fs = require('fs');
 
-// ipcMain.handle('showDialog', (e, msg) => {
-// 	dialog.showSaveDialog(filename => {
-// 		fs.writeFileSync(filename + ".txt", msg, "utf-8", () => {
-// 			console.log("attempted to write to the desktop");
-// 		});
-// 	});
-// });
+// check if in dev mode
+let dev = process.argv[2] == '--dev'
 
 // Keep a global reference of the window object, in case of garbage collection
 let window
@@ -34,7 +22,6 @@ app.whenReady().then(() => {
 		height: 550,
 		minWidth: 900,
 		minHeight: 550,
-		frame: true,
 		webPreferences: {
 			nodeIntegration: true,
 			contextIsolation: false
@@ -42,13 +29,33 @@ app.whenReady().then(() => {
 	})
 
 	// define starting view: index.html
-	window.loadFile(path.join(__dirname, '../app/views/index.html'))
-	// set Menu Bar as per template
-	// Menu.setApplicationMenu(Menu.buildFromTemplate(mainMenuTemplate))
-})
+	window.loadFile(path.join(__dirname, '../public/index.html'))
 
-// template containing MenuItems
-const mainMenuTemplate = []
+	// remove Electron MenuBar; re-add Reload and Developer Console if in dev mode
+	// https://dev.to/abulhasanlakhani/conditionally-appending-developer-tools-menuitem-to-an-existing-menu-in-electron-236k
+	let newMenu = Menu.buildFromTemplate([])
+	if (dev) {
+		newMenu.append(
+			new MenuItem({
+				label: 'RELOAD',
+				click: () => {
+					window.reload()
+				},
+				accelerator: 'F5'
+			})
+		)
+		newMenu.append(
+			new MenuItem({
+				label: 'DEVELOPER CONSOLE',
+				click: () => {
+					window.webContents.toggleDevTools()
+				},
+				accelerator: 'F12'
+			})
+		)
+	}
+	Menu.setApplicationMenu(newMenu)
+})
 
 // fully close app when all windows are closed
 app.on('window-all-closed', () => {
