@@ -4,18 +4,21 @@
 	"description": "bachelor_project: visualizing a*",
 	"main": "src/main.js",
 	"scripts": {
-		"start": "electron .",
+		"start": "electron-forge start",
 		"dev": "electron . --dev",
-		"build": "electron-packager . --platform=win32 --out=builds",
-		"test": "echo \"ERROR: no test specified\" && exit 1"
+		"package": "electron-forge package",
+		"make": "electron-forge make"
 	},
 	"author": "Silas Irmisch",
 	"license": "",
 	"devDependencies": {
-		"electron": "^6.1.12",
-		"electron-packager": "^16.0.0"
+		"@electron-forge/cli": "^6.0.4",
+		"@electron-forge/maker-squirrel": "^6.0.4",
+		"@electron-forge/maker-zip": "^6.0.4",
+		"electron": "^22.0.0"
 	},
 	"dependencies": {
+		"electron-squirrel-startup": "^1.0.0",
 		"linked-list": "^3.1.0"
 	}
 }
