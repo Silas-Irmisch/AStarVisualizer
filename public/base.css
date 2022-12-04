@@ -15,21 +15,23 @@ a {
 	text-decoration: none;
 }
 
-.left_container {
-	height: 450px;
-
+.content {
 	display: flex;
-	flex-direction: row;
-	flex-wrap: nowrap;
-	justify-content: space-around;
+	gap: 40px;
 }
 
-.grid_container {
-	width: 100vw;
+.left_container {
+	padding-left: 50px;
 }
 
 .right_container {
-	width: 110vw;
+	padding-right: 50px;
+	min-width: 400px;
+	width: 600px;
+}
+
+.grid_container {
+	width: auto;
 }
 
 .right_container ul {

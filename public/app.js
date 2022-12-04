@@ -38,12 +38,13 @@ ctx.lineWidth = 4
 ctx.strokeStyle = '#FFFFFF'
 
 // Global Variables: Editing Mode
+var _inProgress = false
 var _editMode = true
 var _editChoice = EDIT.WEIGHT1
 
 // data to be sent to backend
-var _startLocation = null
-var _endLocation = null
+var _startPosition = null
+var _endPosition = null
 // _weights-Array initializing: 2D-Array containing weight-strings
 var _weights = Array(GRID_HEIGHT)
 for (let i = 0; i < GRID_HEIGHT; i++) _weights[i] = Array(GRID_WIDTH).fill(EDIT.WEIGHT1)
@@ -86,19 +87,35 @@ for (let i = 0; i < GRID_WIDTH; i++) {
 }
 
 // called by button: toggling Editing-Phase On/Off
-// IMPORTANT: (missing feature) turning Editing On while A* Process started shouldnt work! or has consequences
 function toggleEditingMode() {
-	// toggle editMode-field on/off
-	_editMode = !_editMode
-	// changing button label and weight-choice interface visiblity
-	if (_editMode) {
+	if (!_editMode) {
+		if (_inProgress) {
+			// was in Progress. Alert -> setting=false, show correct button again
+			alert('Quit?!')
+			_inProgress = false
+			document.getElementById('submit').hidden = false
+			document.getElementById('next').hidden = true
+		}
+		// changing button label and weight-choice interface visiblity
 		document.getElementById('toggle_editingmode').innerHTML = "I'm done!"
 		document.getElementById('edit_ui').style.display = 'block'
 		document.getElementById('scale_ui').style.display = 'block'
+
+		// toggle editMode-field on/off
+		_editMode = !_editMode
 	} else {
+		// abort if start&end have not been set
+		if (!_startPosition || !_endPosition || _startPosition == _endPosition) {
+			alert('Please assign both a Starting and Ending Position!')
+			return -1
+		}
+		// changing button label and weight-choice interface visiblity
 		document.getElementById('toggle_editingmode').innerHTML = "Let's edit!"
 		document.getElementById('edit_ui').style.display = 'none'
 		document.getElementById('scale_ui').style.display = 'none'
+
+		// toggle editMode-field on/off
+		_editMode = !_editMode
 	}
 }
 
@@ -199,15 +216,15 @@ function applyWeightToCell(cell) {
 }
 
 // called to ensure only one START and one END exist
-// params: cellName-String; s_e is either 'S' or 'E' to write in Cell
-function replaceStartOrEnd(cellName, s_e) {
+// params: cellName-String; choice is either 'S' or 'E' to write in Cell
+function replaceStartOrEnd(cellName, choice) {
 	for (const cell of document.getElementById('grid').children) {
 		if (cellName === cell.id) {
-			cell.innerHTML = s_e
-			if (s_e === 'S') _startLocation = cellName
-			else _endLocation = cellName
+			cell.innerHTML = choice
+			if (choice === 'S') _startPosition = cellName
+			else _endPosition = cellName
 		} else {
-			if (cell.innerHTML === s_e) cell.innerHTML = ''
+			if (cell.innerHTML == choice) cell.innerHTML = ''
 		}
 	}
 }
@@ -249,17 +266,46 @@ function colorCellBorder(cellX, cellY, color) {
 	cell.style.borderColor = color
 }
 
-// called to send data to backend
+// called to start progress
 function submitGraph() {
-	// TODO
-	// check if start/end exist (_location), ..
-	console.log(_weights)
-	console.log('From ' + _startLocation + ' to ' + _endLocation)
+	// abort if in ediitng mode
+	if (_editMode) {
+		alert('You\'re in EDITING MODE!\n\nIf you\'re done editing, please confirm in the "Edit"-Tab!')
+		return -1
+	}
+	// abort if start&end have not been set
+	if (!_startPosition || !_endPosition || _startPosition == _endPosition) {
+		alert('Please assign both a Starting and Ending Position!')
+		return -1
+	}
+
+	// send data to backend
+	console.log('Sending data...')
+	com.sendGrid({
+		startPosition: { x: cellX(_startPosition), y: cellY(_startPosition) },
+		endPosition: { x: cellX(_endPosition), y: cellY(_endPosition) },
+		weights: _weights,
+		scale: _weightScale
+	})
+
+	_inProgress = true
+	document.getElementById('submit').hidden = true
+	document.getElementById('next').hidden = false
+	return 0
+}
+
+// requests the next step from backend
+function nextStep() {
+	if (_editMode) {
+		alert('You\'re in EDITING MODE!\n\nIf you\'re done editing, please confirm in the "Edit"-Tab!')
+		return -1
+	}
+	com.nextStep()
 }
 
 // TESTING: calling functions
 // drawLine(0, 0, 1, 0)
-// drawLine(3, 3, 3, 4)
+// drawLine(1, 0, 1, 1)
 // colorCellBorder(1, 1, '#FF0000')
-// colorCellBorder(3, 3, '#00FF00')
-// colorCellBorder(5, 5, '#0000FF')
+// colorCellBorder(1, 2, '#00FF00')
+// colorCellBorder(1, 3, '#0000FF')

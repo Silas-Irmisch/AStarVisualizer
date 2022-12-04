@@ -7,18 +7,19 @@
 		<link rel="stylesheet" type="text/css" href="./grid.css"/>
 	</head>
 	<body>
-		<!-- Page Content -->
-		<div class="left_container">
-			<!-- Left Side -->
-			<div class="grid_container">
-				<br>
-				<canvas width="400", height="400"></canvas>
-				<div id="grid" class="grid"></div>
+		
+		<div class="content">
+			
+			<div class="left_container">
+				<div class="grid_container">
+					<br>
+					<canvas width="400", height="400"></canvas>
+					<div id="grid" class="grid"></div>
+				</div>
 			</div>
 	
-			<!-- Right Side -->
 			<div class="right_container">
-				<!-- https://www.w3schools.com/w3css/w3css_tabulators.asp -->
+				<!-- TABS: https://www.w3schools.com/w3css/w3css_tabulators.asp -->
 				<ul>
 					<li><button class="tab-button" onclick="selectTab('tab-pseudo')">Pseudo Code</button></li>
 					<li><button class="tab-button" onclick="selectTab('tab-explan')">A* Explanation</button></li>
@@ -32,7 +33,7 @@
 					<h3 style="display:inline"> EDITING INTERFACE</h3> &emsp; <button id="toggle_editingmode" onclick="toggleEditingMode()">I'm done!</button>
 					<br><br>
 					<div style="display:flex">
-						<div id="edit_ui" style="flex: 50%">
+						<div id="edit_ui" style="flex:30%">
 							<input type="radio" id="w1" name="choice_elements" onclick="radioButtonChoice(this)" checked/>
 							<label id="w1_l" for="w1">1</label> <br>
 							<input type="radio" id="w2" name="choice_elements" onclick="radioButtonChoice(this)"/>
@@ -48,7 +49,7 @@
 							<input type="radio" id="end" name="choice_elements" onclick="radioButtonChoice(this)"/>
 							<label for="end">END</label> <br>
 						</div>
-						<div id="scale_ui" style="flex:50%">
+						<div id="scale_ui" style="flex:70%">
 							<p>Weight Scale</p>
 							<input type="radio" id="preset1" name="preset_elements" onclick="radioButtonChoice(this)" checked/>
 							<label for="preset1">1, 2, 3, 4</label> <br>
@@ -60,7 +61,8 @@
 					</div>
 				</div>
 			
-				<button onclick="submitGraph()">NEXT STEP</button> 
+				<button id="submit" onclick="submitGraph()">FIND A PATH!</button>
+				<button id="next" onclick="nextStep()" hidden>NEXT STEP</button>
 			</div>
 		</div>
 	</body>

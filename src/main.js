@@ -5,6 +5,9 @@
 const { app, BrowserWindow, Menu, MenuItem, ipcMain } = require('electron')
 const path = require('path')
 
+// import local classes
+const AStar = require('./modules/AStar.js')
+
 // check if in dev mode
 let dev = process.argv[2] == '--dev'
 
@@ -18,13 +21,16 @@ app.disableHardwareAcceleration()
 app.whenReady().then(() => {
 	// define window parameters
 	window = new BrowserWindow({
-		width: 900,
+		width: 1100,
+		minWidth: 1100,
 		height: 550,
-		minWidth: 900,
 		minHeight: 550,
+		maxHeight: 550,
+		fullscreenable: false,
 		webPreferences: {
+			preload: path.join(__dirname, './preload.js'),
 			nodeIntegration: true,
-			contextIsolation: false
+			contextIsolation: true
 		}
 	})
 
@@ -60,4 +66,15 @@ app.whenReady().then(() => {
 // fully close app when all windows are closed
 app.on('window-all-closed', () => {
 	if (process.platform !== 'darwin') app.quit()
+})
+
+// ipc Handlers (communication with "frontend"):
+// receiving grid data
+ipcMain.on('grid_ready', (event, data) => {
+	console.out('READY')
+	AStar.buildGrid(data.startPosition, data.endPosition, data.weights, data.scale)
+})
+ipcMain.on('next-step', event => {
+	console.out('NEXT')
+	AStar.getGrid()
 })
