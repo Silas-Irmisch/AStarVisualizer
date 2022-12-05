@@ -3,7 +3,13 @@
  * 		Frontend Setup Functions
  */
 
+// reading Settings from config files
+// Note: Files don't change in runtime so one-time-read is sufficient
+import COLORS from '../config/Colors.json' assert { type: 'json' }
+import SCALE from '../config/ScalePresets.json' assert { type: 'json' }
+
 // defining limited amount of options for editing-strings
+// not done per config-json, because that would imply that changing values is an option
 const EDIT = {
 	NONE: 'NONE',
 	START: 'START',
@@ -15,22 +21,9 @@ const EDIT = {
 	WALL: 'WALL'
 }
 
-// defining Weight Scale preset values
-const SCALE = {
-	PRESET1: [1, 2, 3, 4],
-	PRESET2: [1, 2, 4, 8],
-	PRESET3: [1, 3, 9, 21]
-}
-
-// Const Settings: Gridsize and Colors
+// Const Settings: Gridsize
 const GRID_WIDTH = 10 // standard 10
 const GRID_HEIGHT = 10 // standard 10
-const COLORMAP = new Map()
-COLORMAP.set(EDIT.WEIGHT1, '#BBBBBB')
-COLORMAP.set(EDIT.WEIGHT2, '#999999')
-COLORMAP.set(EDIT.WEIGHT3, '#777777')
-COLORMAP.set(EDIT.WEIGHT4, '#555555')
-COLORMAP.set(EDIT.WALL, '#111111')
 
 // Canvas Setup, Global Canvas Settings
 var ctx = document.getElementsByTagName('canvas')[0].getContext('2d')
@@ -68,8 +61,8 @@ for (let i = 0; i < GRID_WIDTH; i++) {
 		let newCell = document.createElement('div')
 		newCell.classList.add('grid_cell')
 		newCell.setAttribute('id', 'cell_' + i + '-' + j)
-		newCell.style.border = '1px solid' + COLORMAP.get(EDIT.WEIGHT1)
-		newCell.style.background = COLORMAP.get(EDIT.WEIGHT1)
+		newCell.style.border = '1px solid' + COLORS[EDIT.WEIGHT1]
+		newCell.style.background = COLORS[EDIT.WEIGHT1]
 
 		// Handlers: Editing-Phase coloring of cell
 		newCell.addEventListener('mousemove', event => {
@@ -84,6 +77,31 @@ for (let i = 0; i < GRID_WIDTH; i++) {
 		// Appending new Cell to the Grid-div
 		grid.appendChild(newCell)
 	}
+}
+
+// adding scale preset options to UI
+let scaleUI = document.getElementById('scale_ui')
+for (let i = 0; i < Object.keys(SCALE).length; i++) {
+	let name = Object.keys(SCALE)[i]
+	let number = name.split('PRESET')[1]
+	let scale = SCALE[name]
+
+	let newInput = document.createElement('input')
+	newInput.type = 'radio'
+	newInput.id = 'p' + number
+	newInput.name = 'preset_elements'
+	newInput.addEventListener('click', event => {
+		radioButtonChoice(newInput)
+	})
+	if (i == 0) newInput.checked = true
+
+	let newLabel = document.createElement('label')
+	newLabel.for = 'p' + number
+	newLabel.innerHTML = scale
+
+	scaleUI.appendChild(newInput)
+	scaleUI.appendChild(newLabel)
+	scaleUI.appendChild(document.createElement('br'))
 }
 
 // called by button: toggling Editing-Phase On/Off
@@ -122,40 +140,25 @@ function toggleEditingMode() {
 // called by weight-choice interface buttons, assigns weight-string to editChoice-field
 // param: input-html-object, clicked by user
 function radioButtonChoice(choiceHTMLObject) {
-	switch (choiceHTMLObject.id) {
-		case 'w1':
-			_editChoice = EDIT.WEIGHT1
-			break
-		case 'w2':
-			_editChoice = EDIT.WEIGHT2
-			break
-		case 'w3':
-			_editChoice = EDIT.WEIGHT3
-			break
-		case 'w4':
-			_editChoice = EDIT.WEIGHT4
-			break
-		case 'wall':
+	let id = choiceHTMLObject.id
+	if (id[0] == 'w') {
+		// weight choice
+		if (id[1] == 'a') {
+			// wall
 			_editChoice = EDIT.WALL
-			break
-		case 'start':
-			_editChoice = EDIT.START
-			break
-		case 'end':
-			_editChoice = EDIT.END
-			break
-		case 'preset1':
-			_weightScale = SCALE.PRESET1
-			updateUI()
-			break
-		case 'preset2':
-			_weightScale = SCALE.PRESET2
-			updateUI()
-			break
-		case 'preset3':
-			_weightScale = SCALE.PRESET3
-			updateUI()
-			break
+		} else {
+			// weight 1-4
+			_editChoice = EDIT['WEIGHT' + id[1]]
+		}
+	} else if (id[0] == 'p') {
+		// preset choice
+		_weightScale = SCALE['PRESET' + id[1]]
+		updateUI()
+	} else {
+		// start
+		if (id == 'start') _editChoice = EDIT.START
+		else if (id == 'end') _editChoice = EDIT.END
+		else _editChoice = EDIT.NONE
 	}
 }
 
@@ -190,25 +193,25 @@ function setCellAttributes(cellName) {
 function applyWeightToCell(cell) {
 	switch (_editChoice) {
 		case EDIT.WEIGHT1:
-			cell.style.background = COLORMAP.get(EDIT.WEIGHT1)
-			cell.style.borderColor = COLORMAP.get(EDIT.WEIGHT1)
+			cell.style.background = COLORS[EDIT.WEIGHT1]
+			cell.style.borderColor = COLORS[EDIT.WEIGHT1]
 			break
 		case EDIT.WEIGHT2:
-			cell.style.background = COLORMAP.get(EDIT.WEIGHT2)
-			cell.style.borderColor = COLORMAP.get(EDIT.WEIGHT1)
+			cell.style.background = COLORS[EDIT.WEIGHT2]
+			cell.style.borderColor = COLORS[EDIT.WEIGHT1]
 			break
 		case EDIT.WEIGHT3:
-			cell.style.background = COLORMAP.get(EDIT.WEIGHT3)
-			cell.style.borderColor = COLORMAP.get(EDIT.WEIGHT1)
+			cell.style.background = COLORS[EDIT.WEIGHT3]
+			cell.style.borderColor = COLORS[EDIT.WEIGHT1]
 			break
 		case EDIT.WEIGHT4:
-			cell.style.background = COLORMAP.get(EDIT.WEIGHT4)
-			cell.style.borderColor = COLORMAP.get(EDIT.WEIGHT1)
+			cell.style.background = COLORS[EDIT.WEIGHT4]
+			cell.style.borderColor = COLORS[EDIT.WEIGHT1]
 			break
 		case EDIT.WALL:
 			if (cell.innerHTML !== '') return
-			cell.style.background = COLORMAP.get(EDIT.WALL)
-			cell.style.borderColor = COLORMAP.get(EDIT.WALL)
+			cell.style.background = COLORS[EDIT.WALL]
+			cell.style.borderColor = COLORS[EDIT.WALL]
 			break
 	}
 
@@ -280,7 +283,6 @@ function submitGraph() {
 	}
 
 	// send data to backend
-	console.log('Sending data...')
 	com.sendGrid({
 		startPosition: { x: cellX(_startPosition), y: cellY(_startPosition) },
 		endPosition: { x: cellX(_endPosition), y: cellY(_endPosition) },
@@ -288,6 +290,7 @@ function submitGraph() {
 		scale: _weightScale
 	})
 
+	// changing local settings and interface
 	_inProgress = true
 	document.getElementById('submit').hidden = true
 	document.getElementById('next').hidden = false
@@ -296,12 +299,19 @@ function submitGraph() {
 
 // requests the next step from backend
 function nextStep() {
+	// abort if in editing mode
 	if (_editMode) {
 		alert('You\'re in EDITING MODE!\n\nIf you\'re done editing, please confirm in the "Edit"-Tab!')
 		return -1
 	}
 	com.nextStep()
 }
+
+// binding js module functions to the html
+window.radioButtonChoice = radioButtonChoice
+window.toggleEditingMode = toggleEditingMode
+window.submitGraph = submitGraph
+window.nextStep = nextStep
 
 // TESTING: calling functions
 // drawLine(0, 0, 1, 0)
