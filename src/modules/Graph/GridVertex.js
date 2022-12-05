@@ -1,3 +1,8 @@
+/** 	GridVertex Class of Graphs
+ *  	Purpose: bachelor thesis
+ *  	Author: silas irmisch
+ */
+
 export default class GridVertex extends Vertex {
 	//fields
 	_x

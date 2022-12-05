@@ -1,18 +1,25 @@
+/**
+ * 		Main File
+ * 		Called on Application Startup
+ * 		Creates Window and starts "Frontend"
+ * 		Purpose: bachelor thesis
+ *  	Author: silas irmisch
+ */
+
 // QuickStart: https://medium.com/@voltx180/a-beginners-guide-to-electron-js-1679fd7b6e4f
-// More Secure Approach (not in use!): https://stackoverflow.com/a/59888788
 
 // require elements of electron
-const { app, BrowserWindow, Menu, MenuItem, ipcMain } = require('electron')
+const { app, BrowserWindow, Menu, MenuItem } = require('electron')
 const path = require('path')
 
-// import local classes
-const AStar = require('./modules/AStar.js')
+// use local ipc.js, which handles communication with frontend
+const ipc = require('./ipc.js')
 
 // check if in dev mode
 let dev = process.argv[2] == '--dev'
 
 // Keep a global reference of the window object, in case of garbage collection
-let window
+var window
 
 // helps fix various issues. try reenabling when desperate..
 app.disableHardwareAcceleration()
@@ -28,6 +35,7 @@ app.whenReady().then(() => {
 		maxHeight: 550,
 		fullscreenable: false,
 		webPreferences: {
+			// setting preload file to be used
 			preload: path.join(__dirname, './preload.js'),
 			nodeIntegration: true,
 			contextIsolation: true
@@ -66,15 +74,4 @@ app.whenReady().then(() => {
 // fully close app when all windows are closed
 app.on('window-all-closed', () => {
 	if (process.platform !== 'darwin') app.quit()
-})
-
-// ipc Handlers (communication with "frontend"):
-// receiving grid data
-ipcMain.on('grid_ready', (event, data) => {
-	console.out('READY')
-	AStar.buildGrid(data.startPosition, data.endPosition, data.weights, data.scale)
-})
-ipcMain.on('next-step', event => {
-	console.out('NEXT')
-	AStar.getGrid()
 })

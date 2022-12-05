@@ -5,7 +5,7 @@
  */
 
 /**
- *  	Methods for Adding and Removing Vertices and Edges have not yet been implemented.
+ *  	Methods for Adding and Removing Vertices and Edges have not been implemented.
  */
 
 import V from './Vertex.js'

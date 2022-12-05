@@ -298,13 +298,13 @@ function submitGraph() {
 }
 
 // requests the next step from backend
-function nextStep() {
+async function nextStep() {
 	// abort if in editing mode
 	if (_editMode) {
 		alert('You\'re in EDITING MODE!\n\nIf you\'re done editing, please confirm in the "Edit"-Tab!')
 		return -1
 	}
-	com.nextStep()
+	console.log(await com.nextStep())
 }
 
 // binding js module functions to the html
