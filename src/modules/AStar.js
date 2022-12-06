@@ -4,10 +4,14 @@
  *  	Author: silas irmisch
  */
 
-import Grid from './Grid/Grid.js'
-import Graph from './Graph/Graph.js'
-import Vertex from './Graph/Vertex.js'
-import Edge from './Graph/Edge.js'
+// import Grid from './Grid/Grid.js'
+// import Graph from './Graph/Graph.js'
+// import Vertex from './Graph/Vertex.js'
+// import Edge from './Graph/Edge.js'
+const Grid = require('./Grid/Grid.js')
+const Graph = require('./Graph/Graph.js')
+const Vertex = require('./Graph/Vertex.js')
+const Edge = require('./Graph/Edge.js')
 
 module.exports = class AStar {
 	// fields

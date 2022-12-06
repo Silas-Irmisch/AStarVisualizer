@@ -3,8 +3,8 @@
  *  	Author: silas irmisch
  */
 
-// const Cell = require('./Cell.js')
-import Cell from './Cell.js'
+const Cell = require('./Cell.js')
+// import Cell from './Cell.js'
 
 module.exports = class Grid {
 	// fields

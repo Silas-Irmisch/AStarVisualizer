@@ -7,8 +7,8 @@
 // use ipcMain from electron
 const { ipcMain } = require('electron')
 // require local AStar module
-import AStar from './modules/AStar.js'
-// const AStar = require('./modules/AStar.js')
+// import AStar from './modules/AStar.js'
+const AStar = require('./modules/AStar.js')
 
 // receiving grid data, calling Gridbuilder
 ipcMain.on('grid_ready', (event, data) => {

@@ -8,14 +8,14 @@
  *  	Methods for Adding and Removing Vertices and Edges have not been implemented.
  */
 
-// const V = require('./Vertex.js')
-// const E = require('./Edge.js')
-import V from './Vertex.js'
-import E from './Edge.js'
+const V = require('./Vertex.js')
+const E = require('./Edge.js')
+// import V from './Vertex.js'
+// import E from './Edge.js'
 
 // https://www.npmjs.com/package/linked-list
-import { Item } from 'linked-list'
-// const { List, Item } = require('linked-list')
+// import { Item } from 'linked-list'
+const { List, Item } = require('linked-list')
 
 module.exports = class Graph {
 	// fields
