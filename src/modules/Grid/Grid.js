@@ -4,7 +4,6 @@
  */
 
 const Cell = require('./Cell.js')
-// import Cell from './Cell.js'
 
 module.exports = class Grid {
 	// fields

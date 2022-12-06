@@ -4,14 +4,9 @@
  *  	Reference: ripphausen
  */
 
-// import V from './Vertex.js'
 const V = require('./Vertex.js')
 
-// https://www.npmjs.com/package/linked-list
-// import { Item } from 'linked-list'
-const { List, Item } = require('linked-list')
-
-module.exports = class Edge extends Item {
+module.exports = class Edge {
 	// fields
 	_vertex1
 	_vertex2

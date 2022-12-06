@@ -10,12 +10,6 @@
 
 const V = require('./Vertex.js')
 const E = require('./Edge.js')
-// import V from './Vertex.js'
-// import E from './Edge.js'
-
-// https://www.npmjs.com/package/linked-list
-// import { Item } from 'linked-list'
-const { List, Item } = require('linked-list')
 
 module.exports = class Graph {
 	// fields
@@ -25,7 +19,7 @@ module.exports = class Graph {
 	_vertexCount
 	// array. collection of vertices
 	_vertices
-	// array of linkedlists. adjancency lists of vertices (indices are consistent)
+	// array of arrays. adjancency lists of vertices (indices are consistent)
 	_adjList
 	// map, int to int. maps vertex-ids to their position index in adjList
 	_vertexIndex
@@ -54,7 +48,7 @@ module.exports = class Graph {
 			}
 
 			// Setting _adjList to correct size and initializing LinkedLists
-			for (let j = 0; j < _vertexCount; j++) _adjList[j] = new List()
+			for (let j = 0; j < _vertexCount; j++) _adjList[j] = new Array()
 
 			// Add edges to _adjList
 			for (const e in edges) {

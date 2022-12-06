@@ -6,19 +6,17 @@
 
 // use ipcMain from electron
 const { ipcMain } = require('electron')
-// require local AStar module
-// import AStar from './modules/AStar.js'
 const AStar = require('./modules/AStar.js')
 
 // receiving grid data, calling Gridbuilder
 ipcMain.on('grid_ready', (event, data) => {
 	console.log('READY')
-	AStar.buildGrid(data.startPosition, data.endPosition, data.weights, data.scale)
-	AStar.translateGridToGraph()
+	let grid = AStar.buildGrid(data.startPosition, data.endPosition, data.weights, data.scale)
+	AStar.translateGridToGraph(grid)
 })
 
 // receiving request for next step, calling AStar-functions and returning response to frontend
 ipcMain.handle('next-step', event => {
 	console.log('NEXT')
-	return AStar.getGrid()
+	return 0
 })
