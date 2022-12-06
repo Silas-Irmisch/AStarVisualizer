@@ -9,11 +9,14 @@
 // QuickStart: https://medium.com/@voltx180/a-beginners-guide-to-electron-js-1679fd7b6e4f
 
 // require elements of electron
-const { app, BrowserWindow, Menu, MenuItem } = require('electron')
-const path = require('path')
+import { app, BrowserWindow, Menu, MenuItem } from 'electron'
+import path from 'path'
+// const { app, BrowserWindow, Menu, MenuItem } = require('electron')
+// const path = require('path')
 
 // use local ipc.js, which handles communication with frontend
-const ipc = require('./ipc.js')
+import './ipc.js'
+// const ipc = require('./ipc.js')
 
 // check if in dev mode
 let dev = process.argv[2] == '--dev'

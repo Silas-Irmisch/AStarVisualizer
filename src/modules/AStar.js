@@ -4,7 +4,10 @@
  *  	Author: silas irmisch
  */
 
-const Grid = require('./Grid/Grid.js')
+import Grid from './Grid/Grid.js'
+import Graph from './Graph/Graph.js'
+import Vertex from './Graph/Vertex.js'
+import Edge from './Graph/Edge.js'
 
 module.exports = class AStar {
 	// fields
@@ -34,9 +37,17 @@ module.exports = class AStar {
 	// @params: optional: call with separate grid, standard is data in _grid-field
 	// @return: grpah as Graph-Object
 	static translateGridToGraph(grid = this._grid) {
-		//
-		//
-		this._graph = new Graph(false, [], [])
-		return this._graph
+		// Vertex-Array first
+		let vertices = []
+		for (let cells in grid._cells) {
+			for (let cell in cells) {
+				let id = cell._x * grid._width + cell._y
+				vertices.push(new Vertex(id))
+			}
+		}
+
+		console.log(vertices)
+		// this._graph = new Graph(false, [], [])
+		// return this._graph
 	}
 }

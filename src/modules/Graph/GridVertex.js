@@ -3,7 +3,7 @@
  *  	Author: silas irmisch
  */
 
-export default class GridVertex extends Vertex {
+module.exports = class GridVertex extends Vertex {
 	//fields
 	_x
 	_y

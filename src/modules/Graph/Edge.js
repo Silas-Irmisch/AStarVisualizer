@@ -8,8 +8,9 @@ import V from './Vertex.js'
 
 // https://www.npmjs.com/package/linked-list
 import { Item } from 'linked-list'
+// const { List, Item } = require('linked-list')
 
-export default class Edge extends Item {
+module.exports = class Edge extends Item {
 	// fields
 	_vertex1
 	_vertex2

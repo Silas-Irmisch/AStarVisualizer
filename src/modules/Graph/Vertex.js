@@ -4,7 +4,7 @@
  *  	Reference: ripphausen
  */
 
-export default class Vertex {
+module.exports = class Vertex {
 	// fields
 	_id
 
