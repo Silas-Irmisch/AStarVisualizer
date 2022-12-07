@@ -13,7 +13,7 @@ const { app, BrowserWindow, Menu, MenuItem } = require('electron')
 const path = require('path')
 
 // use local ipc.js, which handles communication with frontend
-const ipc = require('./ipc.js')
+const ipc = require('./pfHub.js')
 
 // check if in dev mode
 let dev = process.argv[2] == '--dev'

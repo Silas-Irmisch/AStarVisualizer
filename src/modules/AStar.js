@@ -1,5 +1,5 @@
 /**
- * 		Static Class containing main astar calculation functions
+ * 		Class containing main astar calculation functions
  *  	Purpose: bachelor thesis
  *  	Author: silas irmisch
  */
@@ -10,23 +10,21 @@ const Vertex = require('./Graph/Vertex.js')
 const Edge = require('./Graph/Edge.js')
 
 module.exports = class AStar {
-	// build Grid from data in parameters
-	// @params: startPosition and endPosition as Object(x in int, y in int), weights in 2DArray of ints, scale in Array(lenght=4), width and height in int
-	// @return: grid as Grid-Object
-	static buildGrid(startPosition, endPosition, weights, scale, width = 10, height = 10) {
-		return new Grid(startPosition, endPosition, weights, scale, width, height)
-	}
+	//fields
+	_graph
+	_startVertex
+	_endVertex
 
-	// build Graph from data in parameters
-	static buildGraph() {
-		// not needed for BA Implementation: We always build from Grid
-		throw 'EXCEPTION: function not implemented. Use translateGridToGraph() instead.'
+	constructor(graph, startVertex, endVertex) {
+		this._graph = graph
+		this._startVertex = startVertex
+		this._endVertex = endVertex
 	}
 
 	// build Graph from Grid
 	// @params: optional: call with separate grid, standard is data in _grid-field
 	// @return: grpah as Graph-Object
-	static translateGridToGraph(grid) {
+	translateGridToGraph(grid) {
 		// save cells for easier/shorter code
 		let cells = grid._cells
 
@@ -77,22 +75,72 @@ module.exports = class AStar {
 			}
 		}
 
-		// construct Graph via GraphModule and return it
-		return new Graph(false, vertices, edges)
+		// construct Graph via Graph-Class and return it
+		this._graph = new Graph(false, vertices, edges)
+		return this._graph
+	}
+
+	// saves starting Vertex from coordinates
+	// @params: x and y and gridWidth in int
+	setStartVertexFromCoords(x, y, gridWidth) {
+		let id = this.coordinatesToId(x, y, gridWidth)
+		this._startVertex = new Vertex(id)
+	}
+
+	// saves ending Vertex from coordinates
+	// @params: x and y and gridWidth in int
+	setEndVertexFromCoords(x, y, gridWidth) {
+		let id = this.coordinatesToId(x, y, gridWidth)
+		this._endVertex = new Vertex(id)
 	}
 
 	// @params: x and y and width as int
 	// @return: int
-	static coordinatesToId(x, y, width) {
+	coordinatesToId(x, y, width) {
 		return x * width + y
 	}
 
 	// @params: vertices as Array of Vertex-Objects, id as int
 	// @return: Vertex-Object
-	static getVertexById(vertices, id) {
+	getVertexById(vertices, id) {
 		for (let i = 0; i < vertices.length; i++) {
 			if (vertices[i]._id == id) return vertices[i]
 		}
 		throw 'EXCEPTION: No Vertex with id:' + id + ' known.'
 	}
+
+	/**
+	 * 		OPEN = empty array
+	 * 		CLOSED = empty array
+	 * 		WHILE OPEN[0] != END:
+	 * 			current = OPEN[0]
+	 * 			CLOSED.push(current)
+	 * 			foreach neighbour of current:
+	 * 				cost = g(current) + movecost(current, neightbour)
+	 * 				if OPEN.contains(neighbour) && cost < g(neighbour):
+	 * 					remove neighbour from OPEN
+	 * 				if not OPEN.contains(neighbour) && not CLOSED.contains(neighbour):
+	 * 					g(neighbour) = cost
+	 * 					OPEN.push(neighbour)
+	 * 					(? set prio queue rank to g(neighbour)+h(neighbour) ?)
+	 * 					neighbour.parent = current
+	 *
+	 * 		reconstruct reverse path from END to START (parent poinsters? )
+	 */
+
+	/* 
+	first = () => {
+		return '1'
+	}
+	second = () => {
+		return '2'
+	}
+	third = () => {
+		return '3'
+	}
+	_arr = [this.first, this.second, this.third]
+	next(index) {
+		return this._arr[index]()
+	} 
+	*/
 }

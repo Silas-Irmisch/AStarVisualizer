@@ -287,7 +287,9 @@ function submitGraph() {
 		startPosition: { x: cellX(_startPosition), y: cellY(_startPosition) },
 		endPosition: { x: cellX(_endPosition), y: cellY(_endPosition) },
 		weights: _weights,
-		scale: _weightScale
+		scale: _weightScale,
+		gridWidth: GRID_WIDTH,
+		gridHeight: GRID_HEIGHT
 	})
 
 	// changing local settings and interface

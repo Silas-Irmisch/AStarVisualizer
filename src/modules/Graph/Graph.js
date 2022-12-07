@@ -32,51 +32,49 @@ module.exports = class Graph {
 		this._adjList = []
 		this._vertexIndex = new Map()
 
-		try {
-			// initialize fields if vertices and edges are given
-			// NOTE: constructor is only option to initialize/fill fields with data (2022-11-29)
-			if (vertices && edges) {
-				this._vertexCount = vertices.length
+		// early exit if vertices/edges missing
+		// NOTE: constructor is only option to initialize/fill fields with data (2022-11-29)
+		if (!vertices || !edges) return
 
-				// add vertices to _vertices and _vertexIndex; set _vertexCount
-				for (let i = 0; i < vertices.length; i++) {
-					let v = vertices[i]
+		// initialize fields if vertices and edges are given
+		this._vertexCount = vertices.length
 
-					if (this._vertexIndex.has(v._id)) throw 'EXCEPTION: duplicate vertex-id'
+		// add vertices to _vertices and _vertexIndex; set _vertexCount
+		for (let i = 0; i < vertices.length; i++) {
+			let v = vertices[i]
 
-					this._vertexIndex.set(v._id, i)
-					this._vertices.push(v)
-				}
+			if (this._vertexIndex.has(v._id)) throw 'EXCEPTION: duplicate vertex-id'
 
-				// Setting _adjList to correct size and initializing Arrays
-				for (let i = 0; i < this._vertexCount; i++) this._adjList[i] = []
+			this._vertexIndex.set(v._id, i)
+			this._vertices.push(v)
+		}
 
-				// Add edges to _adjList
-				for (let i = 0; i < edges.length; i++) {
-					let e = edges[i]
+		// Setting _adjList to correct size and initializing Arrays
+		for (let i = 0; i < this._vertexCount; i++) this._adjList[i] = []
 
-					// check if vertices of edge e are known
-					let vi1 = this._vertexIndex.get(e._vertex1._id)
-					if (vi1 == null) throw 'EXCEPTION: Vertex1 of edge does not exist.'
-					let vi2 = this._vertexIndex.get(e._vertex2._id)
-					if (vi2 == null) throw 'EXCEPTION: Vertex2 of edge does not exist.'
+		// Add edges to _adjList
+		for (let i = 0; i < edges.length; i++) {
+			let e = edges[i]
 
-					// Append Edge e to Neighbourhood
-					this._adjList[vi1].push(e)
-				}
+			// check if vertices of edge e are known
+			let vi1 = this._vertexIndex.get(e._vertex1._id)
+			if (vi1 == null) throw 'EXCEPTION: Vertex1 of edge does not exist.'
+			let vi2 = this._vertexIndex.get(e._vertex2._id)
+			if (vi2 == null) throw 'EXCEPTION: Vertex2 of edge does not exist.'
 
-				// If not directed: additionally insert each edge in neighbourhood of vertex2
-				if (!this._isDirected) {
-					for (let i = 0; i < edges.length; i++) {
-						let e = edges[i]
-						let vi2 = this._vertexIndex.get(e._vertex2._id)
-						// Append Edge e to Neighbourhood
-						this._adjList[vi2].push(e)
-					}
-				}
-			}
-		} catch (e) {
-			console.log(e)
+			// Append Edge e to Neighbourhood
+			this._adjList[vi1].push(e)
+		}
+
+		// If directed: done
+		if (this._isDirected) return
+
+		// additionally insert each edge in neighbourhood of vertex2
+		for (let i = 0; i < edges.length; i++) {
+			let e = edges[i]
+			let vi2 = this._vertexIndex.get(e._vertex2._id)
+			// Append Edge e to Neighbourhood
+			this._adjList[vi2].push(e)
 		}
 	}
 
@@ -84,16 +82,16 @@ module.exports = class Graph {
 	// @params: id as int
 	getVertex(id) {
 		let vid = this._vertexIndex.get(id)
-		if (vid) {
-			return this._vertices[vid]
-		} else {
+		if (vid == null) {
 			return null
+		} else {
+			return this._vertices[vid]
 		}
 	}
 
 	// @return: all edges of the Graph as Array
 	getEdges() {
-		let edges = Array()
+		let edges = []
 		for (const v in this._vertices) {
 			let neighbourEdges = this._adjList[this._vertexIndex.get(v._id)]
 
@@ -118,7 +116,7 @@ module.exports = class Graph {
 		let neighbours = new List()
 
 		let vi = this._vertexIndex.get(id)
-		if (!vi) return null
+		if (vi == null) return null
 
 		let neighbourEdges = this._adjList[vi]
 		for (const e in neighbourEdges) {
@@ -143,7 +141,7 @@ module.exports = class Graph {
 		let edges = new List()
 
 		let vi = this._vertexIndex.get(id)
-		if (!vi) return null
+		if (vi == null) return null
 
 		for (const e in this._adjList[vi]) {
 			edges.append(e)

@@ -12,21 +12,16 @@ module.exports = class Grid {
 	_cells
 
 	// @params: width in int, height in int; both standard=10
-	constructor(startPosition, endPosition, weights, scale, width = 10, height = 10) {
+	constructor(weights, scale, width = 10, height = 10) {
 		this._width = width
 		this._height = height
 		this._cells = []
-
-		let sX = startPosition.x
-		let sY = startPosition.y
-		let eX = endPosition.x
-		let eY = endPosition.y
 
 		// fill 2DArray with Cells (standard weights)
 		for (let i = 0; i < width; i++) {
 			this._cells[i] = []
 			for (let j = 0; j < height; j++) {
-				this._cells[i][j] = new Cell(i, j, this.getWeight(scale, weights[i][j]), sX == i && sY == j, eX == i && eY == j)
+				this._cells[i][j] = new Cell(i, j, this.getWeight(scale, weights[i][j]))
 			}
 		}
 	}
