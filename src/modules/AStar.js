@@ -42,34 +42,38 @@ module.exports = class AStar {
 				vertices.push(new Vertex(id))
 			}
 		}
+
 		// Edge-Array
 		let edges = []
+		// add edges in x-direction
 		for (let i = 0; i < grid._width - 1; i++) {
-			for (let j = 0; j < grid._height - 1; j++) {
-				// if cell or neighbour (x-direction) is not wall: add an edge
-				if (cells[i][j]._weight != -1 && cells[i + 1][j]._weight != -1) {
-					// calculate weight
-					let xWeight = Math.max(cells[i][j]._weight, cells[i + 1][j]._weight)
-					// new Edge
-					let xVertex1 = vertices[this.coordinatesToId(cells[i][j]._x, cells[i][j]._y, grid._width)]
-					let xVertex2 = vertices[this.coordinatesToId(cells[i + 1][j]._x, cells[i + 1][j]._y, grid._width)]
-					let xEdge = new Edge(xVertex1, xVertex2, xWeight)
-					// add edge to array
-					edges.push(xEdge)
-				}
+			for (let j = 0; j < grid._height; j++) {
+				// if cell or neighbour (x-direction) is not wall: ignore
+				if (cells[i][j]._weight == -1 || cells[i + 1][j]._weight == -1) continue
+				// calculate weight
+				let xWeight = Math.max(cells[i][j]._weight, cells[i + 1][j]._weight)
+				// find Vertices from Array and new Edge
+				let xVertex1 = this.getVertexById(vertices, this.coordinatesToId(cells[i][j]._x, cells[i][j]._y, grid._width))
+				let xVertex2 = this.getVertexById(vertices, this.coordinatesToId(cells[i + 1][j]._x, cells[i + 1][j]._y, grid._width))
+				let xEdge = new Edge(xVertex1, xVertex2, xWeight)
+				// add edge to array
+				edges.push(xEdge)
+			}
+		}
 
-				// same procedure for y direction
-				// if cell or neighbour (y-direction) is not wall: add an edge
-				if (cells[i][j]._weight != -1 && cells[i][j + 1]._weight != -1) {
-					// calculate weight
-					let yWeight = Math.max(cells[i][j]._weight, cells[i][j + 1]._weight)
-					// new Edge
-					let yVertex1 = vertices[this.coordinatesToId(cells[i][j]._x, cells[i][j]._y, grid._width)]
-					let yVertex2 = vertices[this.coordinatesToId(cells[i][j + 1]._x, cells[i][j + 1]._y, grid._width)]
-					let yEdge = new Edge(yVertex1, yVertex2, yWeight)
-					// add edge to array
-					edges.push(yEdge)
-				}
+		// same procedure for y direction
+		for (let i = 0; i < grid._width; i++) {
+			for (let j = 0; j < grid._height - 1; j++) {
+				// if cell or neighbour (y-direction) is not wall: ignore
+				if (cells[i][j]._weight == -1 || cells[i][j + 1]._weight == -1) continue
+				// calculate weight
+				let yWeight = Math.max(cells[i][j]._weight, cells[i][j + 1]._weight)
+				// find Vertices from Array and new Edge
+				let yVertex1 = this.getVertexById(vertices, this.coordinatesToId(cells[i][j]._x, cells[i][j]._y, grid._width))
+				let yVertex2 = this.getVertexById(vertices, this.coordinatesToId(cells[i][j + 1]._x, cells[i][j + 1]._y, grid._width))
+				let yEdge = new Edge(yVertex1, yVertex2, yWeight)
+				// add edge to array
+				edges.push(yEdge)
 			}
 		}
 
@@ -81,5 +85,14 @@ module.exports = class AStar {
 	// @return: int
 	static coordinatesToId(x, y, width) {
 		return x * width + y
+	}
+
+	// @params: vertices as Array of Vertex-Objects, id as int
+	// @return: Vertex-Object
+	static getVertexById(vertices, id) {
+		for (let i = 0; i < vertices.length; i++) {
+			if (vertices[i]._id == id) return vertices[i]
+		}
+		throw 'EXCEPTION: No Vertex with id:' + id + ' known.'
 	}
 }

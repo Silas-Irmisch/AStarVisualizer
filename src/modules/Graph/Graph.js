@@ -46,30 +46,32 @@ module.exports = class Graph {
 
 					this._vertexIndex.set(v._id, i)
 					this._vertices.push(v)
-					this._vertexCount++
 				}
 
 				// Setting _adjList to correct size and initializing Arrays
-				for (let j = 0; j < this._vertexCount; j++) this._adjList[j] = []
+				for (let i = 0; i < this._vertexCount; i++) this._adjList[i] = []
 
 				// Add edges to _adjList
-				for (const e in edges) {
+				for (let i = 0; i < edges.length; i++) {
+					let e = edges[i]
+
 					// check if vertices of edge e are known
-					let vi1 = this._vertexIndex.get(e._vertex1)
-					if (!vi1) throw 'EXCEPTION: Vertex1 of edge does not exist.'
-					let vi2 = this._vertexIndex.get(e._vertex2)
-					if (!vi2) throw 'EXCEPTION: Vertex2 of edge does not exist.'
+					let vi1 = this._vertexIndex.get(e._vertex1._id)
+					if (vi1 == null) throw 'EXCEPTION: Vertex1 of edge does not exist.'
+					let vi2 = this._vertexIndex.get(e._vertex2._id)
+					if (vi2 == null) throw 'EXCEPTION: Vertex2 of edge does not exist.'
 
 					// Append Edge e to Neighbourhood
-					this._adjList[vi1].append(e)
+					this._adjList[vi1].push(e)
 				}
 
 				// If not directed: additionally insert each edge in neighbourhood of vertex2
 				if (!this._isDirected) {
-					for (const e in edges) {
-						let vi2 = this._vertexIndex.get(e._vertex2)
+					for (let i = 0; i < edges.length; i++) {
+						let e = edges[i]
+						let vi2 = this._vertexIndex.get(e._vertex2._id)
 						// Append Edge e to Neighbourhood
-						this._adjList[vi2].append(e)
+						this._adjList[vi2].push(e)
 					}
 				}
 			}

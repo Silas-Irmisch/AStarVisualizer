@@ -12,8 +12,8 @@ const AStar = require('./modules/AStar.js')
 ipcMain.on('grid_ready', (event, data) => {
 	console.log('READY')
 	let grid = AStar.buildGrid(data.startPosition, data.endPosition, data.weights, data.scale)
-	// let graph = AStar.translateGridToGraph(grid)
-	// console.log(graph._isDirected)
+	let graph = AStar.translateGridToGraph(grid)
+	// what now???
 })
 
 // receiving request for next step, calling AStar-functions and returning response to frontend
