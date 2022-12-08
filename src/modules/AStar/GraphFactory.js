@@ -1,30 +1,19 @@
 /**
- * 		Class containing main astar calculation functions
+ * 		static Class to translate a Grid into a Graph
  *  	Purpose: bachelor thesis
  *  	Author: silas irmisch
  */
 
-const Grid = require('./Grid/Grid.js')
-const Graph = require('./Graph/Graph.js')
-const Vertex = require('./Graph/Vertex.js')
-const Edge = require('./Graph/Edge.js')
+const Grid = require('../Grid/Grid.js')
+const Graph = require('../Graph/Graph.js')
+const Vertex = require('../Graph/Vertex.js')
+const Edge = require('../Graph/Edge.js')
 
-module.exports = class AStar {
-	//fields
-	_graph
-	_startVertex
-	_endVertex
-
-	constructor(graph, startVertex, endVertex) {
-		this._graph = graph
-		this._startVertex = startVertex
-		this._endVertex = endVertex
-	}
-
+module.exports = class GraphFactory {
 	// build Graph from Grid
 	// @params: optional: call with separate grid, standard is data in _grid-field
 	// @return: grpah as Graph-Object
-	translateGridToGraph(grid) {
+	static translateGridToGraph(grid) {
 		// save cells for easier/shorter code
 		let cells = grid._cells
 
@@ -46,7 +35,7 @@ module.exports = class AStar {
 		// add edges in x-direction
 		for (let i = 0; i < grid._width - 1; i++) {
 			for (let j = 0; j < grid._height; j++) {
-				// if cell or neighbour (x-direction) is not wall: ignore
+				// if cell or neighbor (x-direction) is not wall: ignore
 				if (cells[i][j]._weight == -1 || cells[i + 1][j]._weight == -1) continue
 				// calculate weight
 				let xWeight = Math.max(cells[i][j]._weight, cells[i + 1][j]._weight)
@@ -62,7 +51,7 @@ module.exports = class AStar {
 		// same procedure for y direction
 		for (let i = 0; i < grid._width; i++) {
 			for (let j = 0; j < grid._height - 1; j++) {
-				// if cell or neighbour (y-direction) is not wall: ignore
+				// if cell or neighbor (y-direction) is not wall: ignore
 				if (cells[i][j]._weight == -1 || cells[i][j + 1]._weight == -1) continue
 				// calculate weight
 				let yWeight = Math.max(cells[i][j]._weight, cells[i][j + 1]._weight)
@@ -76,71 +65,38 @@ module.exports = class AStar {
 		}
 
 		// construct Graph via Graph-Class and return it
-		this._graph = new Graph(false, vertices, edges)
-		return this._graph
+		return new Graph(false, vertices, edges)
 	}
 
-	// saves starting Vertex from coordinates
-	// @params: x and y and gridWidth in int
-	setStartVertexFromCoords(x, y, gridWidth) {
-		let id = this.coordinatesToId(x, y, gridWidth)
-		this._startVertex = new Vertex(id)
-	}
-
-	// saves ending Vertex from coordinates
-	// @params: x and y and gridWidth in int
-	setEndVertexFromCoords(x, y, gridWidth) {
-		let id = this.coordinatesToId(x, y, gridWidth)
-		this._endVertex = new Vertex(id)
+	static getAverageWeightOfGraph(graph) {
+		let edges = graph.getEdges()
+		let weightSum = 0
+		for (let i = 0; i < edges.length; i++) {
+			weightSum += edges[i]._weight
+		}
+		return weightSum / edges.length
 	}
 
 	// @params: x and y and width as int
 	// @return: int
-	coordinatesToId(x, y, width) {
-		return x * width + y
+	static coordinatesToId(x, y, width) {
+		return Number(x) * Number(width) + Number(y)
+	}
+
+	// @params: id and width as int
+	// @return: object containing x and y as int
+	static idToCoords(id, width) {
+		let y = id % width
+		let x = (id - y) / width
+		return { x: x, y: y }
 	}
 
 	// @params: vertices as Array of Vertex-Objects, id as int
 	// @return: Vertex-Object
-	getVertexById(vertices, id) {
+	static getVertexById(vertices, id) {
 		for (let i = 0; i < vertices.length; i++) {
 			if (vertices[i]._id == id) return vertices[i]
 		}
 		throw 'EXCEPTION: No Vertex with id:' + id + ' known.'
 	}
-
-	/**
-	 * 		OPEN = empty array
-	 * 		CLOSED = empty array
-	 * 		WHILE OPEN[0] != END:
-	 * 			current = OPEN[0]
-	 * 			CLOSED.push(current)
-	 * 			foreach neighbour of current:
-	 * 				cost = g(current) + movecost(current, neightbour)
-	 * 				if OPEN.contains(neighbour) && cost < g(neighbour):
-	 * 					remove neighbour from OPEN
-	 * 				if not OPEN.contains(neighbour) && not CLOSED.contains(neighbour):
-	 * 					g(neighbour) = cost
-	 * 					OPEN.push(neighbour)
-	 * 					(? set prio queue rank to g(neighbour)+h(neighbour) ?)
-	 * 					neighbour.parent = current
-	 *
-	 * 		reconstruct reverse path from END to START (parent poinsters? )
-	 */
-
-	/* 
-	first = () => {
-		return '1'
-	}
-	second = () => {
-		return '2'
-	}
-	third = () => {
-		return '3'
-	}
-	_arr = [this.first, this.second, this.third]
-	next(index) {
-		return this._arr[index]()
-	} 
-	*/
 }

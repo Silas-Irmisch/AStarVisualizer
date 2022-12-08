@@ -113,6 +113,8 @@ function toggleEditingMode() {
 			_inProgress = false
 			document.getElementById('submit').hidden = false
 			document.getElementById('next').hidden = true
+			let canvas = document.getElementsByTagName('canvas')[0]
+			ctx.clearRect(0, 0, canvas.width, canvas.height)
 		}
 		// changing button label and weight-choice interface visiblity
 		document.getElementById('toggle_editingmode').innerHTML = "I'm done!"
@@ -306,7 +308,15 @@ async function nextStep() {
 		alert('You\'re in EDITING MODE!\n\nIf you\'re done editing, please confirm in the "Edit"-Tab!')
 		return -1
 	}
-	console.log(await com.nextStep())
+	let path = await com.nextStep()
+	console.log(path)
+	for (let i = 0; i < path.length - 1; i++) {
+		let y = path[i]._id % GRID_WIDTH
+		let x = (path[i]._id - y) / GRID_WIDTH
+		let y2 = path[i + 1]._id % GRID_WIDTH
+		let x2 = (path[i + 1]._id - y2) / GRID_WIDTH
+		drawLine(y, x, y2, x2)
+	}
 }
 
 // binding js module functions to the html

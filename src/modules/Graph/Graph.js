@@ -13,16 +13,16 @@ const E = require('./Edge.js')
 
 module.exports = class Graph {
 	// fields
-	// bool. =true if directed graph
 	_isDirected
-	// int. amount of vertices
+	// bool. =true if directed graph
 	_vertexCount
-	// array. collection of vertices
+	// int. amount of vertices
 	_vertices
-	// array of arrays. adjancency lists of vertices (indices are consistent)
+	// array. collection of vertices
 	_adjList
-	// map, int to int. maps vertex-ids to their position index in adjList
+	// array of arrays. adjancency lists of vertices (indices are consistent)
 	_vertexIndex
+	// map, int to int. maps vertex-ids to their position index in adjList
 
 	// @params: isDirected as bool, vertices as Array, edges as Array
 	constructor(isDirected, vertices, edges) {
@@ -62,18 +62,18 @@ module.exports = class Graph {
 			let vi2 = this._vertexIndex.get(e._vertex2._id)
 			if (vi2 == null) throw 'EXCEPTION: Vertex2 of edge does not exist.'
 
-			// Append Edge e to Neighbourhood
+			// Append Edge e to Neighborhood
 			this._adjList[vi1].push(e)
 		}
 
 		// If directed: done
 		if (this._isDirected) return
 
-		// additionally insert each edge in neighbourhood of vertex2
+		// additionally insert each edge in neighborhood of vertex2
 		for (let i = 0; i < edges.length; i++) {
 			let e = edges[i]
 			let vi2 = this._vertexIndex.get(e._vertex2._id)
-			// Append Edge e to Neighbourhood
+			// Append Edge e to Neighborhood
 			this._adjList[vi2].push(e)
 		}
 	}
@@ -82,20 +82,19 @@ module.exports = class Graph {
 	// @params: id as int
 	getVertex(id) {
 		let vid = this._vertexIndex.get(id)
-		if (vid == null) {
-			return null
-		} else {
-			return this._vertices[vid]
-		}
+		if (vid == null) return null
+		return this._vertices[vid]
 	}
 
 	// @return: all edges of the Graph as Array
 	getEdges() {
 		let edges = []
-		for (const v in this._vertices) {
-			let neighbourEdges = this._adjList[this._vertexIndex.get(v._id)]
+		for (let i = 0; i < this._vertices.length; i++) {
+			let v = this._vertices[i]
+			let neighborEdges = this._adjList[this._vertexIndex.get(v._id)]
 
-			for (const e in neighbourEdges) {
+			for (let j = 0; j < neighborEdges.length; j++) {
+				let e = neighborEdges[j]
 				if (this._isDirected || (!this._isDirected && e._vertex1._id == v._id)) {
 					edges.push(e)
 				}
@@ -104,47 +103,67 @@ module.exports = class Graph {
 		return edges
 	}
 
-	// @return: adjacent vertices of vertex as LinkedList
+	// @return: adjacent vertices of vertex as Array
 	// @params: vertex as V
-	getNeighboursOfVertex(vertex) {
-		return getNeighboursById(vertex._id)
+	getNeighborsOfVertex(vertex) {
+		return this.getNeighborsById(vertex._id)
 	}
 
-	// @return: adjacent vertices of vertex with id=param as LinkedList
+	// @return: adjacent vertices of vertex with id=param as Array
 	// @params: id as int
-	getNeighboursById(id) {
-		let neighbours = new List()
-
+	getNeighborsById(id) {
 		let vi = this._vertexIndex.get(id)
 		if (vi == null) return null
 
-		let neighbourEdges = this._adjList[vi]
-		for (const e in neighbourEdges) {
-			let v2 = e._vertex2
-			if (b._id == id) {
-				b = e._vertex1
+		let neighbors = []
+		let neighborEdges = this._adjList[vi]
+		for (let i = 0; i < neighborEdges.length; i++) {
+			let e = neighborEdges[i]
+			let v = e._vertex2
+			if (v._id == id) {
+				v = e._vertex1
 			}
-			neighbours.append(b)
+			neighbors.push(v)
 		}
-		return neighbours
+		return neighbors
 	}
 
 	// @return: incident edges of vertex as Array
 	// @params: vertex as V
 	getIncidentEdgesOfVertex(vertex) {
-		return getIncidentEdgesById(vertex._id)
+		return this.getIncidentEdgesById(vertex._id)
 	}
 
 	// @return: incident edges of vertex with id=param as Array
 	// @params: id as int
 	getIncidentEdgesById(id) {
-		let edges = new List()
-
 		let vi = this._vertexIndex.get(id)
 		if (vi == null) return null
 
-		for (const e in this._adjList[vi]) {
-			edges.append(e)
+		let edges = []
+		for (let i = 0; i < this._adjList[vi].length; i++) {
+			edges.push(this._adjList[vi][i])
+		}
+		return edges
+	}
+
+	// @return: edge(s) between vertex1 and vertex2
+	// @params: vertex1 and vertex2 as V
+	getEdgesBetweenVertices(vertex1, vertex2) {
+		return this.getEdgesByIds(vertex1._id, vertex2._id)
+	}
+
+	// @return: edge(s) between vertex1 and vertex2 by ids
+	// @params: id1 and id2 as int
+	getEdgesByIds(id1, id2) {
+		let v2id = this._vertexIndex.get(id2)
+		if (v2id == null) return null
+
+		let edges = []
+		let incidentEdges = this.getIncidentEdgesById(id1)
+		for (let i = 0; i < incidentEdges.length; i++) {
+			let e = incidentEdges[i]
+			if (e._vertex2._id == id2 || e._vertex1._id == id2) edges.push(e)
 		}
 		return edges
 	}
