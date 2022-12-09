@@ -314,7 +314,7 @@ function submitGraph() {
 }
 
 // requests the next step from backend
-async function nextStep() {
+function nextStep() {
 	// abort if in editing mode
 	if (_editMode) {
 		alert('You\'re in EDITING MODE!\n\nIf you\'re done editing, please confirm in the "Edit"-Tab!')
@@ -341,4 +341,4 @@ window.nextStep = nextStep
 
 // TESTING: calling functions
 // drawLine(0, 0, 1, 0)
-// colorCellBorder(1, 1, '#FF0000')
+// colorCellBorder(1, 1, "OPEN")
