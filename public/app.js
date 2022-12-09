@@ -28,7 +28,7 @@ const GRID_HEIGHT = 10 // should be 10
 // Canvas Setup, Global Canvas Settings
 var ctx = document.getElementsByTagName('canvas')[0].getContext('2d')
 ctx.lineWidth = 4
-ctx.strokeStyle = '#FFFFFF'
+ctx.strokeStyle = COLORS.PATH
 
 // Global Variables: Editing Mode
 var _inProgress = false
@@ -43,6 +43,9 @@ var _weights = Array(GRID_HEIGHT)
 for (let i = 0; i < GRID_HEIGHT; i++) _weights[i] = Array(GRID_WIDTH).fill(EDIT.WEIGHT1)
 // field with set weight values; initializing standard values 1,2,3,4
 var _weightScale = SCALE.PRESET1
+
+// resulting data from AStar-Progress
+var _stepData = null
 // -----------------------------------------------------------------------------------------------------------------
 
 // Grid Setup: find grid
@@ -269,9 +272,11 @@ function drawLine(startX, startY, endX, endY) {
 
 // function to color cell border.
 // will be called to mark Nodes in lists
-function colorCellBorder(cellX, cellY, color) {
+function colorCellBorder(cellX, cellY, type) {
 	let cell = document.getElementById('cell_' + cellX + '-' + cellY)
-	cell.style.borderColor = color
+	if (type == 'OPEN') cell.style.borderColor = COLOR.OPEN
+	else if (type == 'CLOSED') cell.style.borderColor = COLOR.CLOSED
+	else throw 'EXCEPTION: colorCellBorder :: type is invalid.'
 }
 
 // called to start progress
@@ -296,16 +301,9 @@ function submitGraph() {
 		gridWidth: GRID_WIDTH,
 		gridHeight: GRID_HEIGHT
 	}).then(res => {
-		console.log(res)
-		if (!res) return
-
-		for (let i = 0; i < res.length - 1; i++) {
-			let y = res[i]._id % GRID_WIDTH
-			let x = (res[i]._id - y) / GRID_WIDTH
-			let y2 = res[i + 1]._id % GRID_WIDTH
-			let x2 = (res[i + 1]._id - y2) / GRID_WIDTH
-			drawLine(y, x, y2, x2)
-		}
+		if (!res) throw 'EXCEPTION: Something went terribly wrong..  :('
+		console.log('AStar: Results are in!')
+		_stepData = res
 	})
 
 	// changing local settings and interface
@@ -323,7 +321,16 @@ async function nextStep() {
 		return -1
 	}
 
-	await com.nextStep()
+	// render Next Step
+	console.log(_stepData)
+	let path = _stepData[_stepData.length - 1]._path
+	for (let i = 0; i < path.length - 1; i++) {
+		let y = path[i]._id % GRID_WIDTH
+		let x = (path[i]._id - y) / GRID_WIDTH
+		let y2 = path[i + 1]._id % GRID_WIDTH
+		let x2 = (path[i + 1]._id - y2) / GRID_WIDTH
+		drawLine(y, x, y2, x2)
+	}
 }
 
 // binding functions to html-window

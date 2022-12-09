@@ -6,9 +6,9 @@
 
 const Grid = require('../Grid/Grid.js')
 const Graph = require('../Graph/Graph.js')
-// const Vertex = require('../Graph/Vertex.js')
-// const Edge = require('../Graph/Edge.js')
 const Factory = require('./GraphFactory.js')
+const Step = require('./StepData.js')
+const StepType = require('./StepTypes.js')
 
 module.exports = class AStar {
 	//fields
@@ -16,7 +16,7 @@ module.exports = class AStar {
 	_startVertex
 	_endVertex
 	_gridWidth
-	_avgWeight // is this needed for heuristic??
+	// _avgWeight // is this needed for heuristic??
 
 	constructor(graph, startVertex, endVertex) {
 		this._graph = graph
@@ -31,12 +31,14 @@ module.exports = class AStar {
 		this._startVertex = this._graph.getVertex(Factory.coordinatesToId(data.startPosition.x, data.startPosition.y, data.gridWidth))
 		this._endVertex = this._graph.getVertex(Factory.coordinatesToId(data.endPosition.x, data.endPosition.y, data.gridWidth))
 		this._gridWidth = data.gridWidth
-		this._avgWeight = Factory.getAverageWeightOfGraph(this._graph)
+		// this._avgWeight = Factory.getAverageWeightOfGraph(this._graph)
 	}
 
 	// executes AStar Algorithm
 	// @return:
 	execute() {
+		/***/ let result = []
+
 		let open = [this._startVertex]
 		let closed = []
 		let priorities = new Map() // vertex -> priority as int
@@ -46,26 +48,42 @@ module.exports = class AStar {
 		cameFrom.set(this._startVertex, null)
 		cost.set(this._startVertex, 0)
 
-		while (open.length > 0) {
-			let current = open[0]
+		/***/ result.push(new Step(StepType.INIT, null, open, closed, null, null))
 
+		while (open.length > 0) {
+			/***/ result.push(new Step(StepType.WHILE, null, null, null, null, null))
+
+			let current = open[0]
+			/***/ result.push(new Step(StepType.CURRENT, current, null, null, null, null))
+
+			/***/ result.push(new Step(StepType.IS_END, current, null, null, null, null))
 			// path found -> early exit
-			if (open[0] == this._endVertex) return this.retracePath(cameFrom)
+			if (current == this._endVertex) {
+				let path = this.retracePath(cameFrom)
+				/***/ result.push(new Step(StepType.CALC_PATH, null, open, closed, path, cost.get(this._endVertex)))
+				return result
+			}
 
 			closed.push(current)
 			open.splice(0, 1)
+			/***/ result.push(new Step(StepType.CLOSED_ADD, current, null, closed, null, null))
+			/***/ result.push(new Step(StepType.OPEN_REM, current, open, null, null, null))
 
 			let neighbors = this._graph.getNeighborsOfVertex(current)
 			for (let index = 0; index < neighbors.length; index++) {
 				let next = neighbors[index]
+				/***/ result.push(new Step(StepType.FOR_NB, next, null, null, null, null))
 
 				let newCost = cost.get(current) + this.getMoveCost(current, next)
+				/***/ result.push(new Step(StepType.NEW_COST, next, null, null, null, null))
 
+				/***/ result.push(new Step(StepType.IS_BETTER, next, open, null, null, null))
 				if (open.includes(next))
 					if (newCost < cost.get(next)) {
 						open.splice(open.indexOf(next), 1)
 					}
 
+				/***/ result.push(new Step(StepType.IS_NEW, next, null, null, null, null))
 				if (!open.includes(next) && !closed.includes(next)) {
 					cost.set(next, newCost)
 					cameFrom.set(next, current)
@@ -74,11 +92,13 @@ module.exports = class AStar {
 					open.sort(function (v1, v2) {
 						return priorities.get(v1) - priorities.get(v2)
 					})
+					/***/ result.push(new Step(StepType.OPEN_ADD, next, open, null, null, null))
 				}
 			}
 		}
 		// no path found
-		return null
+		/***/ result.push(new Step(StepType.NO_PATH, null, null, null, null, null))
+		return result
 	}
 
 	// @return: Array of Vertices in Order of Path
@@ -105,6 +125,6 @@ module.exports = class AStar {
 		let coords1 = Factory.idToCoords(vertex._id, this._gridWidth)
 		let coords2 = Factory.idToCoords(this._endVertex._id, this._gridWidth)
 		// 4 directions movement -> Manhattan method
-		return Math.abs(coords1.x - coords2.x) + Math.abs(coords1.y - coords2.y) * this._avgWeight
+		return Math.abs(coords1.x - coords2.x) + Math.abs(coords1.y - coords2.y) //* this._avgWeight
 	}
 }

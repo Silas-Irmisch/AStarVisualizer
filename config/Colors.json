@@ -3,5 +3,8 @@
 	"WEIGHT2": "#999999",
 	"WEIGHT3": "#777777",
 	"WEIGHT4": "#555555",
-	"WALL": "#111111"
+	"WALL": "#111111",
+	"OPEN": "#0000FF",
+	"CLOSED": "#00FF00",
+	"PATH": "#FFFFFF"
 }

@@ -18,8 +18,3 @@ ipcMain.handle('grid_ready', (event, data) => {
 	astar.SetupFromGrid(data)
 	return astar.execute()
 })
-
-// receiving request for next step, calling AStar-functions and returning response to frontend
-ipcMain.handle('next-step', event => {
-	console.log('NEXT: nothing')
-})

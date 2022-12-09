@@ -2,6 +2,12 @@
  * 		This script handles purely visual content of index.html
  */
 
+// fill Explanation-Tab with content
+// TODO
+
+// fell Help-Tab with content
+// TODO
+
 // @params: tabName in String
 function selectTab(tabName) {
 	let tabs = document.getElementsByClassName('tab')
