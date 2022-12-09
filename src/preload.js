@@ -10,6 +10,6 @@ const { contextBridge, ipcRenderer } = require('electron')
 // testing preload
 // source: https://electronjs.org
 contextBridge.exposeInMainWorld('com', {
-	sendGrid: data => ipcRenderer.send('grid_ready', data),
+	sendGrid: data => ipcRenderer.invoke('grid_ready', data),
 	nextStep: () => ipcRenderer.invoke('next-step')
 })

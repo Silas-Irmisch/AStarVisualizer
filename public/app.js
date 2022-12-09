@@ -22,8 +22,8 @@ const EDIT = {
 }
 
 // Const Settings: Gridsize
-const GRID_WIDTH = 10 // standard 10
-const GRID_HEIGHT = 10 // standard 10
+const GRID_WIDTH = 10 // should be 10
+const GRID_HEIGHT = 10 // should be 10
 
 // Canvas Setup, Global Canvas Settings
 var ctx = document.getElementsByTagName('canvas')[0].getContext('2d')
@@ -113,8 +113,10 @@ function toggleEditingMode() {
 			_inProgress = false
 			document.getElementById('submit').hidden = false
 			document.getElementById('next').hidden = true
+			// clear drawn path and empty saved draw-data of context
 			let canvas = document.getElementsByTagName('canvas')[0]
 			ctx.clearRect(0, 0, canvas.width, canvas.height)
+			ctx.beginPath()
 		}
 		// changing button label and weight-choice interface visiblity
 		document.getElementById('toggle_editingmode').innerHTML = "I'm done!"
@@ -211,6 +213,7 @@ function applyWeightToCell(cell) {
 			cell.style.borderColor = COLORS[EDIT.WEIGHT1]
 			break
 		case EDIT.WALL:
+			// abort if cell is start/end
 			if (cell.innerHTML !== '') return
 			cell.style.background = COLORS[EDIT.WALL]
 			cell.style.borderColor = COLORS[EDIT.WALL]
@@ -292,6 +295,17 @@ function submitGraph() {
 		scale: _weightScale,
 		gridWidth: GRID_WIDTH,
 		gridHeight: GRID_HEIGHT
+	}).then(res => {
+		console.log(res)
+		if (!res) return
+
+		for (let i = 0; i < res.length - 1; i++) {
+			let y = res[i]._id % GRID_WIDTH
+			let x = (res[i]._id - y) / GRID_WIDTH
+			let y2 = res[i + 1]._id % GRID_WIDTH
+			let x2 = (res[i + 1]._id - y2) / GRID_WIDTH
+			drawLine(y, x, y2, x2)
+		}
 	})
 
 	// changing local settings and interface
@@ -308,18 +322,11 @@ async function nextStep() {
 		alert('You\'re in EDITING MODE!\n\nIf you\'re done editing, please confirm in the "Edit"-Tab!')
 		return -1
 	}
-	let path = await com.nextStep()
-	console.log(path)
-	for (let i = 0; i < path.length - 1; i++) {
-		let y = path[i]._id % GRID_WIDTH
-		let x = (path[i]._id - y) / GRID_WIDTH
-		let y2 = path[i + 1]._id % GRID_WIDTH
-		let x2 = (path[i + 1]._id - y2) / GRID_WIDTH
-		drawLine(y, x, y2, x2)
-	}
+
+	await com.nextStep()
 }
 
-// binding js module functions to the html
+// binding functions to html-window
 window.radioButtonChoice = radioButtonChoice
 window.toggleEditingMode = toggleEditingMode
 window.submitGraph = submitGraph
@@ -327,7 +334,4 @@ window.nextStep = nextStep
 
 // TESTING: calling functions
 // drawLine(0, 0, 1, 0)
-// drawLine(1, 0, 1, 1)
 // colorCellBorder(1, 1, '#FF0000')
-// colorCellBorder(1, 2, '#00FF00')
-// colorCellBorder(1, 3, '#0000FF')

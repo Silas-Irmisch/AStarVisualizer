@@ -6,8 +6,8 @@
 
 const Grid = require('../Grid/Grid.js')
 const Graph = require('../Graph/Graph.js')
-const Vertex = require('../Graph/Vertex.js')
-const Edge = require('../Graph/Edge.js')
+// const Vertex = require('../Graph/Vertex.js')
+// const Edge = require('../Graph/Edge.js')
 const Factory = require('./GraphFactory.js')
 
 module.exports = class AStar {
@@ -16,7 +16,7 @@ module.exports = class AStar {
 	_startVertex
 	_endVertex
 	_gridWidth
-	_avgWeight // is this needed fro heuristic??
+	_avgWeight // is this needed for heuristic??
 
 	constructor(graph, startVertex, endVertex) {
 		this._graph = graph
@@ -34,18 +34,9 @@ module.exports = class AStar {
 		this._avgWeight = Factory.getAverageWeightOfGraph(this._graph)
 	}
 
-	test() {
-		try {
-			let v1 = new Vertex(11)
-			let v2 = new Vertex(12)
-			let edges = this._graph.getEdgesBetweenVertices(v2, v1)
-			console.log(edges)
-		} catch (error) {
-			console.log(error)
-		}
-	}
-
-	instantAStar() {
+	// executes AStar Algorithm
+	// @return:
+	execute() {
 		let open = [this._startVertex]
 		let closed = []
 		let priorities = new Map() // vertex -> priority as int
@@ -58,24 +49,21 @@ module.exports = class AStar {
 		while (open.length > 0) {
 			let current = open[0]
 
-			if (open[0] == this._endVertex) break
+			// path found -> early exit
+			if (open[0] == this._endVertex) return this.retracePath(cameFrom)
 
 			closed.push(current)
 			open.splice(0, 1)
-			console.log(' > current: ' + current._id)
 
 			let neighbors = this._graph.getNeighborsOfVertex(current)
 			for (let index = 0; index < neighbors.length; index++) {
 				let next = neighbors[index]
-				console.log('  > next: ' + next._id)
 
 				let newCost = cost.get(current) + this.getMoveCost(current, next)
-				console.log('   > cost: ' + newCost)
 
 				if (open.includes(next))
 					if (newCost < cost.get(next)) {
 						open.splice(open.indexOf(next), 1)
-						console.log('    (next sliced)')
 					}
 
 				if (!open.includes(next) && !closed.includes(next)) {
@@ -86,25 +74,23 @@ module.exports = class AStar {
 					open.sort(function (v1, v2) {
 						return priorities.get(v1) - priorities.get(v2)
 					})
-
-					console.log('   > next set up')
 				}
 			}
-			console.log('>  End of ONE WhileCycle.')
 		}
-		console.log('#### WHILE EXITED ####')
+		// no path found
+		return null
+	}
 
+	// @return: Array of Vertices in Order of Path
+	// @params: cameFrom as Map (vertex -> vertex)
+	retracePath(cameFrom) {
 		let path = [this._endVertex]
 		for (let i = 0; i < cameFrom.size; i++) {
 			let prev = cameFrom.get(path[i])
 			if (!prev) break // prev is null = startVertex Found
 			path.push(prev)
 		}
-		path.reverse()
-		if (!path[0] == this._startVertex) return null
-
-		console.log(path)
-		return path
+		return path.reverse()
 	}
 
 	// @return: weight of edge between Vertices

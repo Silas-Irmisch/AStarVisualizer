@@ -9,18 +9,17 @@ const { ipcMain } = require('electron')
 
 const AStar = require('./modules/AStar/AStar.js')
 
-// initating AStar-Class
+// initialize AStar;
 var astar = new AStar()
 
 // receiving grid data, calling Gridbuilder
-ipcMain.on('grid_ready', (event, data) => {
-	console.log('READY')
+ipcMain.handle('grid_ready', (event, data) => {
+	console.log('ASTAR!')
 	astar.SetupFromGrid(data)
+	return astar.execute()
 })
 
 // receiving request for next step, calling AStar-functions and returning response to frontend
 ipcMain.handle('next-step', event => {
-	console.log('NEXT')
-	// return astar.test()
-	return astar.instantAStar()
+	console.log('NEXT: nothing')
 })
