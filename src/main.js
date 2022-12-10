@@ -37,8 +37,7 @@ app.whenReady().then(() => {
 		webPreferences: {
 			// setting preload file to be used
 			preload: path.join(__dirname, './preload.js'),
-			nodeIntegration: true,
-			contextIsolation: true
+			nodeIntegration: true
 		}
 	})
 

@@ -1,25 +1,18 @@
 .grid {
 	height: 400px;
 	width: 400px;
-	/* position: absolute; */
 	
 	display: grid;
-	grid-template-columns: repeat(10, 1fr);
-	grid-template-rows: repeat(10, 1fr);
 	gap: 0;
 }
 
 .grid_cell {
-	height: 36px;
-	width: 36px;
-	border-radius: 2px;
 	font-size: 35px;
 	color: #FFFF00;
 	/* https://stackoverflow.com/a/4919231 */
 	text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
 	text-align: center;
 	line-height: 40px;
-
 	/* https://stackoverflow.com/a/2310809 */
 	-webkit-touch-callout: none;
     -webkit-user-select: none;

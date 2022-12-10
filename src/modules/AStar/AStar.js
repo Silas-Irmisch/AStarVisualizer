@@ -7,8 +7,8 @@
 const Grid = require('../Grid/Grid.js')
 const Graph = require('../Graph/Graph.js')
 const Factory = require('./GraphFactory.js')
-const Step = require('./StepData.js')
-const StepType = require('./StepTypes.js')
+const Step = require('../../interfaces/StepData.js')
+const StepType = require('../../interfaces/StepTypes.js')
 
 module.exports = class AStar {
 	//fields
@@ -48,7 +48,7 @@ module.exports = class AStar {
 		cameFrom.set(this._startVertex, null)
 		cost.set(this._startVertex, 0)
 
-		/***/ result.push(new Step(StepType.INIT, null, open, closed, null, null))
+		/***/ result.push(new Step(StepType.INIT, null, [...open], null, null, null))
 
 		while (open.length > 0) {
 			/***/ result.push(new Step(StepType.WHILE, null, null, null, null, null))
@@ -60,14 +60,14 @@ module.exports = class AStar {
 			// path found -> early exit
 			if (current == this._endVertex) {
 				let path = this.retracePath(cameFrom)
-				/***/ result.push(new Step(StepType.CALC_PATH, null, open, closed, path, cost.get(this._endVertex)))
+				/***/ result.push(new Step(StepType.CALC_PATH, null, [...open], [...closed], path, cost.get(this._endVertex)))
 				return result
 			}
 
 			closed.push(current)
 			open.splice(0, 1)
-			/***/ result.push(new Step(StepType.CLOSED_ADD, current, null, closed, null, null))
-			/***/ result.push(new Step(StepType.OPEN_REM, current, open, null, null, null))
+			/***/ result.push(new Step(StepType.CLOSED_ADD, current, null, [...closed], null, null))
+			/***/ result.push(new Step(StepType.OPEN_REM, current, [...open], null, null, null))
 
 			let neighbors = this._graph.getNeighborsOfVertex(current)
 			for (let index = 0; index < neighbors.length; index++) {
@@ -77,7 +77,7 @@ module.exports = class AStar {
 				let newCost = cost.get(current) + this.getMoveCost(current, next)
 				/***/ result.push(new Step(StepType.NEW_COST, next, null, null, null, null))
 
-				/***/ result.push(new Step(StepType.IS_BETTER, next, open, null, null, null))
+				/***/ result.push(new Step(StepType.IS_BETTER, next, [...open], null, null, null))
 				if (open.includes(next))
 					if (newCost < cost.get(next)) {
 						open.splice(open.indexOf(next), 1)
@@ -92,7 +92,7 @@ module.exports = class AStar {
 					open.sort(function (v1, v2) {
 						return priorities.get(v1) - priorities.get(v2)
 					})
-					/***/ result.push(new Step(StepType.OPEN_ADD, next, open, null, null, null))
+					/***/ result.push(new Step(StepType.OPEN_ADD, next, [...open], null, null, null))
 				}
 			}
 		}

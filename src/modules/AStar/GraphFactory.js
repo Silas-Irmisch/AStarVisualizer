@@ -38,7 +38,7 @@ module.exports = class GraphFactory {
 				// if cell or neighbor (x-direction) is not wall: ignore
 				if (cells[i][j]._weight == -1 || cells[i + 1][j]._weight == -1) continue
 				// calculate weight
-				let xWeight = Math.max(cells[i][j]._weight, cells[i + 1][j]._weight)
+				let xWeight = this.calculateEdgeWeight(cells[i][j]._weight, cells[i + 1][j]._weight)
 				// find Vertices from Array and new Edge
 				let xVertex1 = this.getVertexById(vertices, this.coordinatesToId(cells[i][j]._x, cells[i][j]._y, grid._width))
 				let xVertex2 = this.getVertexById(vertices, this.coordinatesToId(cells[i + 1][j]._x, cells[i + 1][j]._y, grid._width))
@@ -54,7 +54,7 @@ module.exports = class GraphFactory {
 				// if cell or neighbor (y-direction) is not wall: ignore
 				if (cells[i][j]._weight == -1 || cells[i][j + 1]._weight == -1) continue
 				// calculate weight
-				let yWeight = Math.max(cells[i][j]._weight, cells[i][j + 1]._weight)
+				let yWeight = this.calculateEdgeWeight(cells[i][j]._weight, cells[i][j + 1]._weight)
 				// find Vertices from Array and new Edge
 				let yVertex1 = this.getVertexById(vertices, this.coordinatesToId(cells[i][j]._x, cells[i][j]._y, grid._width))
 				let yVertex2 = this.getVertexById(vertices, this.coordinatesToId(cells[i][j + 1]._x, cells[i][j + 1]._y, grid._width))
@@ -68,6 +68,15 @@ module.exports = class GraphFactory {
 		return new Graph(false, vertices, edges)
 	}
 
+	// selects the greater of two weights to be the weight of the edge
+	// @return: weight as int
+	// @params: weight1 and weight2 as int
+	static calculateEdgeWeight(weight1, weight2) {
+		return Math.max(weight1, weight2)
+	}
+
+	// @return: the average Weight of all Edges of the graph
+	// @params: graph as Graph
 	static getAverageWeightOfGraph(graph) {
 		let edges = graph.getEdges()
 		let weightSum = 0
