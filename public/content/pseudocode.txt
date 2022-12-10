@@ -1,0 +1,22 @@
+OPEN = emty list
+CLOSED = empty list
+COST = empty map (vertex->COST)
+PARENT = empty map (vertex->vertex)
+add START to OPEN
+while OPEN not empty:
+	CURRENT = OPEN[0]
+	if CURRENT is END:
+		retrace path and return
+	add CURRENT to CLOSED
+	remove first element from OPEN
+	for NEXT in neighbours of CURRENT:
+		NEWCOST = COST(CURRENT) + COST(CURRENT -> NEXT)
+		if NEXT in OPEN & NEWCOST < previously known COST(NEXT):
+			remove NEXT from OPEN
+		if NEXT not in OPEN & not in CLOSED:
+			COST(NEXT) = NEWCOST
+			PARENT(NEXT) = CURRENT
+			add NEXT to OPEN
+			priority of NEXT = (NEWCOST + approx. cost to END)
+			sort OPEN by priority
+return no path

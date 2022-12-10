@@ -1,11 +1,27 @@
 /**
- * 		This script handles purely visual content of index.html
+ * 		This script handles the tab content of index.html
  */
+
+// fill PseudoCode-Tab with content
+// https://forum.freecodecamp.org/t/load-local-text-file-with-js/83063
+fetch('./content/pseudocode.txt')
+	.then(res => res.text())
+	.then(text => {
+		let lines = text.split(/\r?\n/)
+
+		let pseudoTab = document.getElementById('tab-pseudo')
+		for (let i = 0; i < lines.length; i++) {
+			let line = document.createElement('pre')
+			line.classList.add('pseudo_line')
+			line.innerHTML = lines[i]
+			pseudoTab.appendChild(line)
+		}
+	})
 
 // fill Explanation-Tab with content
 // TODO
 
-// fell Help-Tab with content
+// fill Help-Tab with content
 // TODO
 
 // @params: tabName in String

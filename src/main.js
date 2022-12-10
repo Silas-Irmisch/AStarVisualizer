@@ -30,9 +30,9 @@ app.whenReady().then(() => {
 	window = new BrowserWindow({
 		width: 1100,
 		minWidth: 1100,
-		height: 550,
-		minHeight: 550,
-		maxHeight: 550,
+		height: 580,
+		minHeight: 580,
+		maxHeight: 580,
 		fullscreenable: false,
 		webPreferences: {
 			// setting preload file to be used

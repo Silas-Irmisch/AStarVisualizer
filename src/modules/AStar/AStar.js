@@ -65,7 +65,7 @@ module.exports = class AStar {
 			}
 
 			closed.push(current)
-			open.splice(0, 1)
+			open.slice(0, 1)
 			/***/ result.push(new Step(StepType.CLOSED_ADD, current, null, [...closed], null, null))
 			/***/ result.push(new Step(StepType.OPEN_REM, current, [...open], null, null, null))
 
