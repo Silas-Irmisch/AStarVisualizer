@@ -98,6 +98,7 @@ for (let i = 0; i < Object.keys(SCALE).length; i++) {
 	if (i == 0) newInput.checked = true
 
 	let newLabel = document.createElement('label')
+	newLabel.id = 'p' + number
 	newLabel.for = 'p' + number
 	newLabel.innerHTML = scale
 
@@ -115,15 +116,11 @@ function toggleEditingMode() {
 			_inProgress = false
 			document.getElementById('submit').hidden = false
 			document.getElementById('next').hidden = true
+			document.getElementById('prev').hidden = true
+			document.getElementById('reset').hidden = true
+			document.getElementById('skip').hidden = true
 			// clear drawn path and empty saved draw-data of context
-			let canvas = document.getElementsByTagName('canvas')[0]
-			ctx.clearRect(0, 0, canvas.width, canvas.height)
-			ctx.beginPath()
-
-			let cells = document.getElementsByClassName('grid_cell')
-			for (let i = 0; i < cells.length; i++) {
-				cells[i].style.borderColor = cells[i].style.backgroundColor
-			}
+			clearGrid()
 		}
 		// changing button label and weight-choice interface visiblity
 		document.getElementById('toggle_editingmode').innerHTML = "I'm done!"
@@ -145,6 +142,17 @@ function toggleEditingMode() {
 
 		// toggle editMode-field on/off
 		_editMode = !_editMode
+	}
+}
+
+function clearGrid() {
+	let canvas = document.getElementsByTagName('canvas')[0]
+	ctx.clearRect(0, 0, canvas.width, canvas.height)
+	ctx.beginPath()
+
+	let cells = document.getElementsByClassName('grid_cell')
+	for (let i = 0; i < cells.length; i++) {
+		cells[i].style.borderColor = cells[i].style.backgroundColor
 	}
 }
 
@@ -277,10 +285,19 @@ function drawLine(startX, startY, endX, endY) {
 // function to color cell border.
 // will be called to mark Nodes in lists
 function colorCellBorder(cellX, cellY, type) {
-	let cell = document.getElementById('cell_' + cellX + '-' + cellY)
-	if (type == 'OPEN') cell.style.borderColor = COLORS.OPEN
-	else if (type == 'CLOSED') cell.style.borderColor = COLORS.CLOSED
-	else throw 'EXCEPTION: colorCellBorder :: type is invalid.'
+	switch (type) {
+		case 'OPEN':
+			document.getElementById('cell_' + cellX + '-' + cellY).style.borderColor = COLORS.OPEN
+			break
+		case 'CLOSED':
+			document.getElementById('cell_' + cellX + '-' + cellY).style.borderColor = COLORS.CLOSED
+			break
+		case 'VERTEX':
+			document.getElementById('cell_' + cellX + '-' + cellY).style.borderColor = COLORS.VERTEX
+			break
+		default:
+			throw 'EXCEPTION: colorCellBorder :: type is invalid.'
+	}
 }
 
 // called to start progress
@@ -308,13 +325,6 @@ function submitGraph() {
 		if (!res) throw 'EXCEPTION: Something went terribly wrong..  :('
 		console.log('AStar: Results are in!')
 		_stepData = res
-
-		// console.log('CALC_PATH')
-		// let step = _stepData[_stepData.length - 1]
-		// renderOpen(step._open)
-		// renderClosed(step._closed)
-		// renderPath(step._path)
-		// console.log(step._cost)
 	})
 
 	// changing local settings and interface
@@ -322,101 +332,114 @@ function submitGraph() {
 	_stepIndex = 0
 	document.getElementById('submit').hidden = true
 	document.getElementById('next').hidden = false
+	document.getElementById('prev').hidden = false
+	document.getElementById('reset').hidden = false
+	document.getElementById('skip').hidden = false
 }
 
-// requests the next step from backend
-function nextStep() {
+// called by button to show a step
+function stepSwitchByDirection(direction) {
 	// abort if in editing mode
 	if (_editMode) {
 		alert('You\'re in EDITING MODE!\n\nIf you\'re done editing, please confirm in the "Edit"-Tab!')
 		return -1
 	}
-	if (_stepIndex >= _stepData.length) return
 
-	// render Next Step and increment stepIndex
-	stepSwitch(_stepData[_stepIndex++])
-}
-
-// requests the next step from backend
-function prevStep() {
-	// abort if in editing mode
-	if (_editMode) {
-		alert('You\'re in EDITING MODE!\n\nIf you\'re done editing, please confirm in the "Edit"-Tab!')
-		return -1
+	// modify _stepIndex acording to direction
+	switch (direction) {
+		case 'prev':
+			_stepIndex--
+			break
+		case 'next':
+			_stepIndex++
+			break
+		case 'reset':
+			_stepIndex = 0
+			break
+		case 'skip':
+			_stepIndex = _stepData.length - 1
+			break
 	}
-	if (_stepIndex < 0) return
 
-	// render Next Step and increment stepIndex
-	stepSwitch(_stepData[_stepIndex--])
+	if (_stepIndex >= _stepData.length || _stepIndex < 0) return
+	stepController(_stepData[_stepIndex])
 }
 
-function stepSwitch(step) {
+function stepController(step) {
+	showStep(step._open, step._closed, step._vertex)
 	switch (step._type) {
 		case TYPE.INIT:
-			console.log('INIT')
-			renderOpen(step._open)
+			colorPseudo([0, 1, 2, 3, 4])
 			break
 		case TYPE.WHILE:
-			console.log('WHILE')
+			colorPseudo([5])
 			break
 		case TYPE.CURRENT:
-			console.log('CURRENT')
+			colorPseudo([6])
 			break
 		case TYPE.IS_END:
-			console.log('IS_END')
+			colorPseudo([7])
 			break
 		case TYPE.CLOSED_ADD:
-			console.log('CLOSED_ADD')
-			renderClosed(step._closed)
+			colorPseudo([9])
 			break
 		case TYPE.OPEN_REM:
-			console.log('OPEN_REM')
+			colorPseudo([10])
 			break
 		case TYPE.FOR_NB:
-			console.log('FOR_NB')
+			colorPseudo([11])
 			break
 		case TYPE.NEW_COST:
-			console.log('NEW_COST')
+			colorPseudo([12])
+			break
+		case TYPE.CHECK_BETTER:
+			colorPseudo([13])
 			break
 		case TYPE.IS_BETTER:
-			console.log('IS_BETTER')
-			renderOpen(step._open)
+			colorPseudo([14])
 			break
 		case TYPE.IS_NEW:
-			console.log('IS_NEW')
+			colorPseudo([15])
 			break
 		case TYPE.OPEN_ADD:
-			console.log('OPEN_ADD')
-			renderOpen(step._open)
+			colorPseudo([16, 17, 18, 19, 20])
 			break
 		case TYPE.NO_PATH:
-			console.log('NO_PATH')
+			colorPseudo([21])
 			break
 		case TYPE.CALC_PATH:
-			console.log('CALC_PATH')
-			renderOpen(step._open)
-			renderClosed(step._closed)
-			renderPath(step._path)
 			console.log(step._cost)
+			showPath(step._path)
+			colorPseudo([8])
 			break
 	}
 }
 
-function renderOpen(open) {
+function colorPseudo(indices) {
+	let lines = document.getElementsByClassName('pseudo_line')
+	for (let i = 0; i < lines.length; i++) {
+		lines[i].style.color = '#000000'
+		if (indices.includes(i)) lines[i].style.color = '#FF0000'
+	}
+}
+
+function showStep(open, closed, vertex) {
+	clearGrid()
 	for (let i = 0; i < open.length; i++) {
 		let coords = idToCoords(open[i]._id)
 		colorCellBorder(coords.x, coords.y, 'OPEN')
 	}
-}
-
-function renderClosed(closed) {
 	for (let i = 0; i < closed.length; i++) {
 		let coords = idToCoords(closed[i]._id)
 		colorCellBorder(coords.x, coords.y, 'CLOSED')
 	}
+	if (vertex) {
+		let coords = idToCoords(vertex._id)
+		colorCellBorder(coords.x, coords.y, 'VERTEX')
+	}
 }
 
-function renderPath(path) {
+function showPath(path) {
 	for (let i = 0; i < path.length - 1; i++) {
 		let coords1 = idToCoords(path[i]._id)
 		let coords2 = idToCoords(path[i + 1]._id)
@@ -436,4 +459,4 @@ function idToCoords(id) {
 window.radioButtonChoice = radioButtonChoice
 window.toggleEditingMode = toggleEditingMode
 window.submitGraph = submitGraph
-window.nextStep = nextStep
+window.stepSwitchByDirection = stepSwitchByDirection

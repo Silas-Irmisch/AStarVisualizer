@@ -48,15 +48,14 @@ module.exports = class AStar {
 		cameFrom.set(this._startVertex, null)
 		cost.set(this._startVertex, 0)
 
-		/***/ result.push(new Step(StepType.INIT, null, [...open], null, null, null))
+		/***/ result.push(new Step(StepType.INIT, null, [...open], [...closed], null, null))
+		for (let openIndex = 0; open.length > 0; openIndex++) {
+			/***/ result.push(new Step(StepType.WHILE, null, [...open], [...closed], null, null))
 
-		while (open.length > 0) {
-			/***/ result.push(new Step(StepType.WHILE, null, null, null, null, null))
+			let current = open[openIndex]
+			/***/ result.push(new Step(StepType.CURRENT, current, [...open], [...closed], null, null))
 
-			let current = open[0]
-			/***/ result.push(new Step(StepType.CURRENT, current, null, null, null, null))
-
-			/***/ result.push(new Step(StepType.IS_END, current, null, null, null, null))
+			/***/ result.push(new Step(StepType.IS_END, current, [...open], [...closed], null, null))
 			// path found -> early exit
 			if (current == this._endVertex) {
 				let path = this.retracePath(cameFrom)
@@ -65,25 +64,26 @@ module.exports = class AStar {
 			}
 
 			closed.push(current)
-			open.splice(0, 1)
-			/***/ result.push(new Step(StepType.CLOSED_ADD, current, null, [...closed], null, null))
-			/***/ result.push(new Step(StepType.OPEN_REM, current, [...open], null, null, null))
+			// open.splice(0, 1)
+			/***/ result.push(new Step(StepType.CLOSED_ADD, current, [...open], [...closed], null, null))
+			/***/ result.push(new Step(StepType.OPEN_REM, current, [...open], [...closed], null, null))
 
 			let neighbors = this._graph.getNeighborsOfVertex(current)
 			for (let index = 0; index < neighbors.length; index++) {
 				let next = neighbors[index]
-				/***/ result.push(new Step(StepType.FOR_NB, next, null, null, null, null))
+				/***/ result.push(new Step(StepType.FOR_NB, next, [...open], [...closed], null, null))
 
 				let newCost = cost.get(current) + this.getMoveCost(current, next)
-				/***/ result.push(new Step(StepType.NEW_COST, next, null, null, null, null))
+				/***/ result.push(new Step(StepType.NEW_COST, next, [...open], [...closed], null, null))
 
-				/***/ result.push(new Step(StepType.IS_BETTER, next, [...open], null, null, null))
+				/***/ result.push(new Step(StepType.CHECK_BETTER, next, [...open], [...closed], null, null))
 				if (open.includes(next))
 					if (newCost < cost.get(next)) {
+						/***/ result.push(new Step(StepType.IS_BETTER, next, [...open], [...closed], null, null))
 						open.splice(open.indexOf(next), 1)
 					}
 
-				/***/ result.push(new Step(StepType.IS_NEW, next, null, null, null, null))
+				/***/ result.push(new Step(StepType.IS_NEW, next, [...open], [...closed], null, null))
 				if (!open.includes(next) && !closed.includes(next)) {
 					cost.set(next, newCost)
 					cameFrom.set(next, current)
@@ -92,12 +92,12 @@ module.exports = class AStar {
 					open.sort(function (v1, v2) {
 						return priorities.get(v1) - priorities.get(v2)
 					})
-					/***/ result.push(new Step(StepType.OPEN_ADD, next, [...open], null, null, null))
+					/***/ result.push(new Step(StepType.OPEN_ADD, next, [...open], [...closed], null, null))
 				}
 			}
 		}
 		// no path found
-		/***/ result.push(new Step(StepType.NO_PATH, null, null, null, null, null))
+		/***/ result.push(new Step(StepType.NO_PATH, null, [...open], [...closed], null, null))
 		return result
 	}
 
