@@ -16,7 +16,7 @@ import EDIT from './interfaces/EditStrings.json' assert { type: 'json' }
 const GRID_WIDTH = 10 // should be 10
 const GRID_HEIGHT = 10 // should be 10
 
-const CELL_BORDER_WIDTH = 3
+const CELL_BORDER_WIDTH = 2
 
 // Canvas Setup, Global Canvas Settings
 var ctx = document.getElementsByTagName('canvas')[0].getContext('2d')
@@ -145,45 +145,22 @@ function toggleEditingMode() {
 	}
 }
 
-function clearGrid() {
-	let canvas = document.getElementsByTagName('canvas')[0]
-	ctx.clearRect(0, 0, canvas.width, canvas.height)
-	ctx.beginPath()
-
-	let cells = document.getElementsByClassName('grid_cell')
-	for (let i = 0; i < cells.length; i++) {
-		cells[i].style.borderColor = cells[i].style.backgroundColor
-	}
-}
-
 // called by weight-choice interface buttons, assigns weight-string to editChoice-field
 // param: input-html-object, clicked by user
 function radioButtonChoice(choiceHTMLObject) {
 	let id = choiceHTMLObject.id
-	if (id[0] == 'w') {
-		// weight choice
-		if (id[1] == 'a') {
-			// wall
-			_editChoice = EDIT.WALL
-		} else {
-			// weight 1-4
-			_editChoice = EDIT['WEIGHT' + id[1]]
-		}
-	} else if (id[0] == 'p') {
-		// preset choice
+	if (id == 'wall') _editChoice = EDIT.WALL
+	else if (id == 'start') _editChoice = EDIT.START
+	else if (id == 'end') _editChoice = EDIT.END
+	else if (id[0] == 'w')
+		// --> weight 1-4
+		_editChoice = EDIT['WEIGHT' + id[1]]
+	else if (id[0] == 'p') {
+		// --> preset
 		_weightScale = SCALE['PRESET' + id[1]]
-		updateUI()
-	} else {
-		// start
-		if (id == 'start') _editChoice = EDIT.START
-		else if (id == 'end') _editChoice = EDIT.END
-		else _editChoice = EDIT.NONE
-	}
-}
-
-// updates the Weights listed in Editing Interface
-function updateUI() {
-	for (let i = 1; i <= 4; i++) document.getElementById('w' + i + '_l').innerHTML = _weightScale[i - 1]
+		// update the Weights listed in Editing Interface
+		for (let i = 1; i <= 4; i++) document.getElementById('w' + i + '_l').innerHTML = _weightScale[i - 1]
+	} else _editChoice = EDIT.NONE
 }
 
 // called by Clicking on Cell in Editing Phase
@@ -252,55 +229,7 @@ function replaceStartOrEnd(cellName, choice) {
 	}
 }
 
-// @params: cellName in String
-// @return: cell coordinate X in String
-function cellX(cellName) {
-	return cellName.split('_')[1].split('-')[0]
-}
-
-// @params: cellName in String
-// @return: cell coordinate Y in String
-function cellY(cellName) {
-	return cellName.split('_')[1].split('-')[1]
-}
-
-// function to draw a line between 2 cells
-// should be called to payint in found path
-function drawLine(startX, startY, endX, endY) {
-	// cancel if out of bounds
-	if (startX < 0 || startY < 0 || endX < 0 || endX < 0) return
-	if (startX > 9 || startY > 9 || endX > 9 || endX > 9) return
-	// cancel if line longer than 1
-	if (endX - startX > 1 || endX - startX < -1 || endY - startY > 1 || endY - startY < -1) return
-	// cancel if diagonal line
-	if (endX - startX != 0 && endY - startY != 0) return
-
-	ctx.moveTo(startX * 40 + 20, startY * 40 + 20)
-	ctx.lineTo(endX * 40 + 20, endY * 40 + 20)
-
-	// add line to canvas
-	ctx.stroke()
-}
-
-// function to color cell border.
-// will be called to mark Nodes in lists
-function colorCellBorder(cellX, cellY, type) {
-	switch (type) {
-		case 'OPEN':
-			document.getElementById('cell_' + cellX + '-' + cellY).style.borderColor = COLORS.OPEN
-			break
-		case 'CLOSED':
-			document.getElementById('cell_' + cellX + '-' + cellY).style.borderColor = COLORS.CLOSED
-			break
-		case 'VERTEX':
-			document.getElementById('cell_' + cellX + '-' + cellY).style.borderColor = COLORS.VERTEX
-			break
-		default:
-			throw 'EXCEPTION: colorCellBorder :: type is invalid.'
-	}
-}
-
-// called to start progress
+// called to send Graph to Backend, receive result as StepData[] and changes button visibility
 function submitGraph() {
 	// abort if in ediitng mode
 	if (_editMode) {
@@ -323,8 +252,8 @@ function submitGraph() {
 		gridHeight: GRID_HEIGHT
 	}).then(res => {
 		if (!res) throw 'EXCEPTION: Something went terribly wrong..  :('
-		console.log('AStar: Results are in!')
 		_stepData = res
+		stepController(_stepData[0])
 	})
 
 	// changing local settings and interface
@@ -365,6 +294,7 @@ function stepSwitchByDirection(direction) {
 	stepController(_stepData[_stepIndex])
 }
 
+// calls showStep to color Borders and calls colorPseudo depending on the Type of Step
 function stepController(step) {
 	showStep(step._open, step._closed, step._vertex)
 	switch (step._type) {
@@ -408,21 +338,14 @@ function stepController(step) {
 			colorPseudo([21])
 			break
 		case TYPE.CALC_PATH:
-			console.log(step._cost)
+			console.log('PATH COST: ' + step._cost)
 			showPath(step._path)
 			colorPseudo([8])
 			break
 	}
 }
 
-function colorPseudo(indices) {
-	let lines = document.getElementsByClassName('pseudo_line')
-	for (let i = 0; i < lines.length; i++) {
-		lines[i].style.color = '#000000'
-		if (indices.includes(i)) lines[i].style.color = '#FF0000'
-	}
-}
-
+// clears the grid and then colors borders of cells as OPEN, CLOSED or specific VERTEX
 function showStep(open, closed, vertex) {
 	clearGrid()
 	for (let i = 0; i < open.length; i++) {
@@ -439,12 +362,92 @@ function showStep(open, closed, vertex) {
 	}
 }
 
+// colors lines of pseudo-code according to given indices
+function colorPseudo(indices) {
+	let lines = document.getElementsByClassName('pseudo_line')
+	for (let i = 0; i < lines.length; i++) {
+		lines[i].style.color = '#000000'
+		if (indices.includes(i)) lines[i].style.color = '#FF0000'
+	}
+}
+
+// iterates array and draws contained path
 function showPath(path) {
+	console.log('PATH LENGTH: ' + path.length)
 	for (let i = 0; i < path.length - 1; i++) {
 		let coords1 = idToCoords(path[i]._id)
 		let coords2 = idToCoords(path[i + 1]._id)
 		drawLine(coords1.y, coords1.x, coords2.y, coords2.x)
 	}
+}
+
+// resets all BorderColors of Cells and drawn Path
+function clearGrid() {
+	let canvas = document.getElementsByTagName('canvas')[0]
+	ctx.clearRect(0, 0, canvas.width, canvas.height)
+	ctx.beginPath()
+
+	let cells = document.getElementsByClassName('grid_cell')
+	for (let i = 0; i < cells.length; i++) {
+		cells[i].style.borderColor = cells[i].style.backgroundColor
+	}
+}
+
+// function to draw a line between 2 cells
+// should be called to payint in found path
+function drawLine(startX, startY, endX, endY) {
+	// cancel if out of bounds
+	if (startX < 0 || startY < 0 || endX < 0 || endX < 0) return
+	if (startX > 9 || startY > 9 || endX > 9 || endX > 9) return
+	// cancel if line longer than 1
+	if (endX - startX > 1 || endX - startX < -1 || endY - startY > 1 || endY - startY < -1) return
+	// cancel if diagonal line
+	if (endX - startX != 0 && endY - startY != 0) return
+
+	ctx.moveTo(startX * 40 + 20, startY * 40 + 20)
+	ctx.lineTo(endX * 40 + 20, endY * 40 + 20)
+
+	// add line to canvas
+	ctx.stroke()
+}
+
+// function to color cell border.
+// will be called to mark Nodes in lists
+function colorCellBorder(cellX, cellY, type) {
+	switch (type) {
+		case 'OPEN':
+			document.getElementById('cell_' + cellX + '-' + cellY).style.borderColor = COLORS.OPEN
+			break
+		case 'CLOSED':
+			document.getElementById('cell_' + cellX + '-' + cellY).style.borderColor = COLORS.CLOSED
+			break
+		case 'VERTEX':
+			document.getElementById('cell_' + cellX + '-' + cellY).style.borderColor = COLORS.VERTEX
+			break
+		default:
+			throw 'EXCEPTION: colorCellBorder :: type is invalid.'
+	}
+}
+
+// binding functions to html-window
+window.radioButtonChoice = radioButtonChoice
+window.toggleEditingMode = toggleEditingMode
+window.submitGraph = submitGraph
+window.stepSwitchByDirection = stepSwitchByDirection
+
+// ------------------------------------------------------------------------------------------------------------------------------------
+// Helper-functions:
+
+// @params: cellName in String
+// @return: cell coordinate X in String
+function cellX(cellName) {
+	return cellName.split('_')[1].split('-')[0]
+}
+
+// @params: cellName in String
+// @return: cell coordinate Y in String
+function cellY(cellName) {
+	return cellName.split('_')[1].split('-')[1]
 }
 
 // @params: id and width as int
@@ -454,9 +457,3 @@ function idToCoords(id) {
 	let x = (id - y) / GRID_WIDTH
 	return { x: x, y: y }
 }
-
-// binding functions to html-window
-window.radioButtonChoice = radioButtonChoice
-window.toggleEditingMode = toggleEditingMode
-window.submitGraph = submitGraph
-window.stepSwitchByDirection = stepSwitchByDirection

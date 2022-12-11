@@ -16,7 +16,6 @@ module.exports = class AStar {
 	_startVertex
 	_endVertex
 	_gridWidth
-	// _avgWeight // is this needed for heuristic??
 
 	constructor(graph, startVertex, endVertex) {
 		this._graph = graph
@@ -31,7 +30,6 @@ module.exports = class AStar {
 		this._startVertex = this._graph.getVertex(Factory.coordinatesToId(data.startPosition.x, data.startPosition.y, data.gridWidth))
 		this._endVertex = this._graph.getVertex(Factory.coordinatesToId(data.endPosition.x, data.endPosition.y, data.gridWidth))
 		this._gridWidth = data.gridWidth
-		// this._avgWeight = Factory.getAverageWeightOfGraph(this._graph)
 	}
 
 	// executes AStar Algorithm
@@ -125,6 +123,6 @@ module.exports = class AStar {
 		let coords1 = Factory.idToCoords(vertex._id, this._gridWidth)
 		let coords2 = Factory.idToCoords(this._endVertex._id, this._gridWidth)
 		// 4 directions movement -> Manhattan method
-		return Math.abs(coords1.x - coords2.x) + Math.abs(coords1.y - coords2.y) //* this._avgWeight
+		return Math.abs(coords1.x - coords2.x) + Math.abs(coords1.y - coords2.y)
 	}
 }

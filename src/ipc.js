@@ -14,7 +14,6 @@ var astar = new AStar()
 
 // receiving grid data, calling Gridbuilder
 ipcMain.handle('grid_ready', (event, data) => {
-	console.log('ASTAR!')
 	astar.SetupFromGrid(data)
 	return astar.execute()
 })
