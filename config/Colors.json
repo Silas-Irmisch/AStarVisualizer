@@ -6,6 +6,6 @@
 	"WALL": "#111111",
 	"OPEN": "#0000DD",
 	"CLOSED": "#00DD00",
-	"VERTEX": "DD0000",
+	"VERTEX": "#DD0000",
 	"PATH": "#FFFFFF"
 }

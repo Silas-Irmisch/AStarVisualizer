@@ -348,13 +348,17 @@ function stepController(step) {
 // clears the grid and then colors borders of cells as OPEN, CLOSED or specific VERTEX
 function showStep(open, closed, vertex) {
 	clearGrid()
-	for (let i = 0; i < open.length; i++) {
-		let coords = idToCoords(open[i]._id)
-		colorCellBorder(coords.x, coords.y, 'OPEN')
+	if (open) {
+		for (let i = 0; i < open.length; i++) {
+			let coords = idToCoords(open[i]._id)
+			colorCellBorder(coords.x, coords.y, 'OPEN')
+		}
 	}
-	for (let i = 0; i < closed.length; i++) {
-		let coords = idToCoords(closed[i]._id)
-		colorCellBorder(coords.x, coords.y, 'CLOSED')
+	if (closed) {
+		for (let i = 0; i < closed.length; i++) {
+			let coords = idToCoords(closed[i]._id)
+			colorCellBorder(coords.x, coords.y, 'CLOSED')
+		}
 	}
 	if (vertex) {
 		let coords = idToCoords(vertex._id)

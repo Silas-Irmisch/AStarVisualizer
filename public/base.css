@@ -62,10 +62,14 @@ a {
 
 .tab {
 	width: 95%;
-	height: 378px;
+	height: 360px;
 	background: #BBBBBB;
 	margin-bottom: 5px;
 	padding: 20px;
 	border-radius: 4px;
 	color: #161616
+}
+
+.astar_control {
+	padding: 0 20px 0 20px
 }
