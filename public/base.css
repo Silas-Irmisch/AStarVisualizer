@@ -67,9 +67,30 @@ a {
 	margin-bottom: 5px;
 	padding: 20px;
 	border-radius: 4px;
-	color: #161616
+	color: #161616;
+	overflow-y: scroll;
 }
 
 .astar_control {
 	padding: 0 20px 0 20px
+}
+
+/* https://www.w3schools.com/howto/howto_css_custom_scrollbar.asp */
+::-webkit-scrollbar {
+	width: 10px;
+}
+  
+/* Track */
+::-webkit-scrollbar-track {
+background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+background: #555;
 }

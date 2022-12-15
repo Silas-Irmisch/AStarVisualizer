@@ -19,10 +19,28 @@ fetch('./content/pseudocode.txt')
 	})
 
 // fill Explanation-Tab with content
-// TODO
+fetch('./content/explanation.txt')
+	.then(res => res.text())
+	.then(text => {
+		let paragraphs = text.split(/\r?\n/)
+
+		let explainTab = document.getElementById('tab-explain')
+		for (let i = 0; i < paragraphs.length; i++) {
+			explainTab.innerHTML += '<br>' + paragraphs[i]
+		}
+	})
 
 // fill Help-Tab with content
-// TODO
+fetch('./content/help.txt')
+	.then(res => res.text())
+	.then(text => {
+		let paragraphs = text.split(/\r?\n/)
+
+		let helpTab = document.getElementById('tab-help')
+		for (let i = 0; i < paragraphs.length; i++) {
+			helpTab.innerHTML += '<br>' + paragraphs[i]
+		}
+	})
 
 // @params: tabName in String
 function selectTab(tabName) {
