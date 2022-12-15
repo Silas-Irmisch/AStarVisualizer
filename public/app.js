@@ -109,36 +109,6 @@ for (let i = 0; i < Object.keys(SCALE).length; i++) {
 	scaleUI.appendChild(document.createElement('br'))
 }
 
-// giving NEXT- and PREV-Button functionality to hold mouse down
-var interval = false
-var intervalSpeedMS = 100
-var nextButton = document.getElementById('next')
-nextButton.addEventListener('mousedown', event => {
-	if (!interval)
-		interval = setInterval(() => {
-			stepSwitchByDirection('next')
-		}, intervalSpeedMS)
-})
-nextButton.addEventListener('mouseup', event => {
-	if (interval) {
-		clearInterval(interval)
-		interval = false
-	}
-})
-var prevButton = document.getElementById('prev')
-prevButton.addEventListener('mousedown', event => {
-	if (!interval)
-		interval = setInterval(() => {
-			stepSwitchByDirection('prev')
-		}, intervalSpeedMS)
-})
-prevButton.addEventListener('mouseup', event => {
-	if (interval) {
-		clearInterval(interval)
-		interval = false
-	}
-})
-
 // called by button: toggling Editing-Phase On/Off
 function toggleEditingMode() {
 	if (!_editMode) {
@@ -260,6 +230,36 @@ function replaceStartOrEnd(cellName, choice) {
 		}
 	}
 }
+
+// giving NEXT- and PREV-Button functionality to hold mouse down
+var interval = false
+var intervalSpeedMS = 100
+var nextButton = document.getElementById('next')
+nextButton.addEventListener('mousedown', event => {
+	if (!interval)
+		interval = setInterval(() => {
+			stepSwitchByDirection('next')
+		}, intervalSpeedMS)
+})
+nextButton.addEventListener('mouseup', event => {
+	if (interval) {
+		clearInterval(interval)
+		interval = false
+	}
+})
+var prevButton = document.getElementById('prev')
+prevButton.addEventListener('mousedown', event => {
+	if (!interval)
+		interval = setInterval(() => {
+			stepSwitchByDirection('prev')
+		}, intervalSpeedMS)
+})
+prevButton.addEventListener('mouseup', event => {
+	if (interval) {
+		clearInterval(interval)
+		interval = false
+	}
+})
 
 // called to send Graph to Backend, receive result as StepData[] and changes button visibility
 function submitGraph() {
