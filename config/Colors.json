@@ -5,7 +5,7 @@
 	"WEIGHT4": "#555555",
 	"WALL": "#111111",
 	"OPEN": "#0000DD",
-	"CLOSED": "#00DD00",
-	"VERTEX": "#DD0000",
+	"VISITED": "#00DD00",
+	"CURRENT": "#DD0000",
 	"PATH": "#FFFFFF"
 }

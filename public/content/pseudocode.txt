@@ -1,22 +1,24 @@
-OPEN = emty list
-CLOSED = empty list
-COST = empty map (vertex->COST)
-PARENT = empty map (vertex->vertex)
-add START to OPEN
-while OPEN not empty:
-	CURRENT = OPEN[0]
-	if CURRENT is END:
-		retrace path and return
-	add CURRENT to CLOSED
-	remove first element from OPEN
-	for NEXT in neighbours of CURRENT:
-		NEWCOST = COST(CURRENT) + COST(CURRENT -> NEXT)
-		if NEXT in OPEN & NEWCOST < previously known COST(NEXT):
-			remove NEXT from OPEN
-		if NEXT not in OPEN & not in CLOSED:
-			COST(NEXT) = NEWCOST
-			PARENT(NEXT) = CURRENT
-			add NEXT to OPEN
-			priority of NEXT = (NEWCOST + approx. cost to END)
-			sort OPEN by priority
-return no path
+1   QUEUE <- list containing only START
+2   f_cost(START) <- 0
+3   g_cost(START) <- 0
+4   g_cost(rest of vertices) <- infinity
+5   parent(all vertices) <- undefined
+6   
+7   while QUEUE is not empty:
+8     current <- vertex in QUEUE with lowest f-cost
+9     if current is END:
+10	    reconstruct reverse path END to START by following parents
+11	    return path
+12    remove current from QUEUE
+13    visited(current) <- true
+14  
+15    for neighbors of current:
+16      if not visited(neighbor):
+17        alt <- g_cost(current) + cost of current to neighbor
+18        if neighbor not in QUEUE or alt < cost(neighbor):
+19          parent(neighbor) <- current
+20          g_cost(neighbor) <- alt
+21          f_cost(neighbor) <- alt + h_cost(neighbor)
+22          add neighbor to QUEUE
+23  
+24  return no path

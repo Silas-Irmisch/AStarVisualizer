@@ -36,6 +36,8 @@ var _weights = Array(GRID_HEIGHT)
 for (let i = 0; i < GRID_HEIGHT; i++) _weights[i] = Array(GRID_WIDTH).fill(EDIT.WEIGHT1)
 // field with set weight values; initializing standard values 1,2,3,4
 var _weightScale = SCALE.PRESET1
+var _formulaChoice = null
+var _tieBreaking = false
 
 // resulting data from AStar-Progress
 var _stepData = null
@@ -249,7 +251,9 @@ function submitGraph() {
 		weights: _weights,
 		scale: _weightScale,
 		gridWidth: GRID_WIDTH,
-		gridHeight: GRID_HEIGHT
+		gridHeight: GRID_HEIGHT,
+		formula: _formulaChoice,
+		tiebreaking: _tieBreaking
 	}).then(res => {
 		if (!res) throw 'EXCEPTION: Something went terribly wrong..  :('
 		_stepData = res
@@ -296,57 +300,50 @@ function stepSwitchByDirection(direction) {
 
 // calls showStep to color Borders and calls colorPseudo depending on the Type of Step
 function stepController(step) {
-	showStep(step._open, step._closed, step._vertex)
+	showStep(step._open, step._visited, step._current)
 	switch (step._type) {
 		case TYPE.INIT:
 			colorPseudo([0, 1, 2, 3, 4])
 			break
 		case TYPE.WHILE:
-			colorPseudo([5])
-			break
-		case TYPE.CURRENT:
 			colorPseudo([6])
 			break
-		case TYPE.IS_END:
+		case TYPE.CURRENT:
 			colorPseudo([7])
 			break
-		case TYPE.CLOSED_ADD:
-			colorPseudo([9])
+		case TYPE.IS_END:
+			colorPseudo([8])
 			break
-		case TYPE.OPEN_REM:
-			colorPseudo([10])
+		case TYPE.PATH_FOUND:
+			showPath(step._path)
+			colorPseudo([9, 10])
+			break
+		case TYPE.SET_VISITED:
+			colorPseudo([11, 12])
 			break
 		case TYPE.FOR_NB:
-			colorPseudo([11])
-			break
-		case TYPE.NEW_COST:
-			colorPseudo([12])
-			break
-		case TYPE.CHECK_BETTER:
-			colorPseudo([13])
-			break
-		case TYPE.IS_BETTER:
 			colorPseudo([14])
 			break
-		case TYPE.IS_NEW:
+		case TYPE.VISITED:
 			colorPseudo([15])
 			break
+		case TYPE.NEW_COST:
+			colorPseudo([16])
+			break
+		case TYPE.IS_GOOD:
+			colorPseudo([17])
+			break
 		case TYPE.OPEN_ADD:
-			colorPseudo([16, 17, 18, 19, 20])
+			colorPseudo([18, 19, 20, 21])
 			break
 		case TYPE.NO_PATH:
-			colorPseudo([21])
-			break
-		case TYPE.CALC_PATH:
-			console.log('PATH COST: ' + step._cost)
-			showPath(step._path)
-			colorPseudo([8])
+			colorPseudo([23])
 			break
 	}
 }
 
 // clears the grid and then colors borders of cells as OPEN, CLOSED or specific VERTEX
-function showStep(open, closed, vertex) {
+function showStep(open, visited, current) {
 	clearGrid()
 	if (open) {
 		for (let i = 0; i < open.length; i++) {
@@ -354,15 +351,15 @@ function showStep(open, closed, vertex) {
 			colorCellBorder(coords.x, coords.y, 'OPEN')
 		}
 	}
-	if (closed) {
-		for (let i = 0; i < closed.length; i++) {
-			let coords = idToCoords(closed[i]._id)
-			colorCellBorder(coords.x, coords.y, 'CLOSED')
+	if (visited) {
+		for (let i = 0; i < visited.length; i++) {
+			let coords = idToCoords(visited[i]._id)
+			colorCellBorder(coords.x, coords.y, 'VISITED')
 		}
 	}
-	if (vertex) {
-		let coords = idToCoords(vertex._id)
-		colorCellBorder(coords.x, coords.y, 'VERTEX')
+	if (current) {
+		let coords = idToCoords(current._id)
+		colorCellBorder(coords.x, coords.y, 'CURRENT')
 	}
 }
 
@@ -377,10 +374,11 @@ function colorPseudo(indices) {
 
 // iterates array and draws contained path
 function showPath(path) {
-	console.log('PATH LENGTH: ' + path.length)
-	for (let i = 0; i < path.length - 1; i++) {
-		let coords1 = idToCoords(path[i]._id)
-		let coords2 = idToCoords(path[i + 1]._id)
+	console.log('PATH COST: ' + path.cost)
+	console.log('PATH LENGTH: ' + path.vertices.length)
+	for (let i = 0; i < path.vertices.length - 1; i++) {
+		let coords1 = idToCoords(path.vertices[i]._id)
+		let coords2 = idToCoords(path.vertices[i + 1]._id)
 		drawLine(coords1.y, coords1.x, coords2.y, coords2.x)
 	}
 }
@@ -418,19 +416,7 @@ function drawLine(startX, startY, endX, endY) {
 // function to color cell border.
 // will be called to mark Nodes in lists
 function colorCellBorder(cellX, cellY, type) {
-	switch (type) {
-		case 'OPEN':
-			document.getElementById('cell_' + cellX + '-' + cellY).style.borderColor = COLORS.OPEN
-			break
-		case 'CLOSED':
-			document.getElementById('cell_' + cellX + '-' + cellY).style.borderColor = COLORS.CLOSED
-			break
-		case 'VERTEX':
-			document.getElementById('cell_' + cellX + '-' + cellY).style.borderColor = COLORS.VERTEX
-			break
-		default:
-			throw 'EXCEPTION: colorCellBorder :: type is invalid.'
-	}
+	document.getElementById('cell_' + cellX + '-' + cellY).style.borderColor = COLORS[type]
 }
 
 // binding functions to html-window

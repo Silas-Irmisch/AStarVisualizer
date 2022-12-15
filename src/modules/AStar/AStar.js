@@ -16,6 +16,8 @@ module.exports = class AStar {
 	_startVertex
 	_endVertex
 	_gridWidth
+	_formula
+	_tiebreaking
 
 	constructor(graph, startVertex, endVertex) {
 		this._graph = graph
@@ -30,6 +32,8 @@ module.exports = class AStar {
 		this._startVertex = this._graph.getVertex(Factory.coordinatesToId(data.startPosition.x, data.startPosition.y, data.gridWidth))
 		this._endVertex = this._graph.getVertex(Factory.coordinatesToId(data.endPosition.x, data.endPosition.y, data.gridWidth))
 		this._gridWidth = data.gridWidth
+		this._formula = data.formula
+		this._tiebreaking = data.tiebreaking
 	}
 
 	// executes AStar Algorithm
@@ -38,64 +42,57 @@ module.exports = class AStar {
 		/***/ let result = []
 
 		let open = [this._startVertex]
-		let closed = []
-		let priorities = new Map() // vertex -> priority as int
-		let cameFrom = new Map() // vertex -> vertex
-		let cost = new Map() // vertex -> cost as int
+		let f_cost = new Map() // vertex -> priority as int
+		let g_cost = new Map() // vertex -> cost as int
+		let parent = new Map() // vertex -> vertex
+		let visited = new Set() // vertex -> boolean
 
-		cameFrom.set(this._startVertex, null)
-		cost.set(this._startVertex, 0)
+		parent.set(this._startVertex, null)
+		g_cost.set(this._startVertex, 0)
+		/***/ result.push(new Step(StepType.INIT, null, [...open], [...visited], null, null))
 
-		/***/ result.push(new Step(StepType.INIT, null, [...open], [...closed], null, null))
-		for (let openIndex = 0; open.length > 0; openIndex++) {
-			/***/ result.push(new Step(StepType.WHILE, null, [...open], [...closed], null, null))
+		while (open.length > 0) {
+			/***/ result.push(new Step(StepType.WHILE, null, [...open], [...visited], null, null))
+			let current = open[0]
+			/***/ result.push(new Step(StepType.CURRENT, current, [...open], [...visited], null, null))
 
-			let current = open[openIndex]
-			/***/ result.push(new Step(StepType.CURRENT, current, [...open], [...closed], null, null))
-
-			/***/ result.push(new Step(StepType.IS_END, current, [...open], [...closed], null, null))
 			// path found -> early exit
+			/***/ result.push(new Step(StepType.IS_END, current, [...open], [...visited], null, null))
 			if (current == this._endVertex) {
-				let path = this.retracePath(cameFrom)
-				/***/ result.push(new Step(StepType.CALC_PATH, null, [...open], [...closed], path, cost.get(this._endVertex)))
+				let path = this.retracePath(parent)
+				/***/ result.push(new Step(StepType.PATH_FOUND, current, [...open], [...visited], path, g_cost.get(this._endVertex)))
 				return result
 			}
+			/***/ result.push(new Step(StepType.SET_VISITED, current, [...open], [...visited], null, null))
+			open.splice(0, 1)
+			visited.add(current)
 
-			closed.push(current)
-			// open.splice(0, 1)
-			/***/ result.push(new Step(StepType.CLOSED_ADD, current, [...open], [...closed], null, null))
-			/***/ result.push(new Step(StepType.OPEN_REM, current, [...open], [...closed], null, null))
-
+			/***/ result.push(new Step(StepType.FOR_NB, current, [...open], [...visited], null, null))
 			let neighbors = this._graph.getNeighborsOfVertex(current)
 			for (let index = 0; index < neighbors.length; index++) {
 				let next = neighbors[index]
-				/***/ result.push(new Step(StepType.FOR_NB, next, [...open], [...closed], null, null))
 
-				let newCost = cost.get(current) + this.getMoveCost(current, next)
-				/***/ result.push(new Step(StepType.NEW_COST, next, [...open], [...closed], null, null))
+				/***/ result.push(new Step(StepType.VISITED, next, [...open], [...visited], null, null))
+				if (!visited.has(next)) {
+					/***/ result.push(new Step(StepType.NEW_COST, next, [...open], [...visited], null, null))
+					let alt = g_cost.get(current) + this.getMoveCost(current, next)
 
-				/***/ result.push(new Step(StepType.CHECK_BETTER, next, [...open], [...closed], null, null))
-				if (open.includes(next))
-					if (newCost < cost.get(next)) {
-						/***/ result.push(new Step(StepType.IS_BETTER, next, [...open], [...closed], null, null))
-						open.splice(open.indexOf(next), 1)
+					/***/ result.push(new Step(StepType.IS_GOOD, next, [...open], [...visited], null, null))
+					if (!open.includes(next) || alt < g_cost.get(next)) {
+						/***/ result.push(new Step(StepType.OPEN_ADD, next, [...open], [...visited], null, null))
+						parent.set(next, current)
+						g_cost.set(next, alt)
+						f_cost.set(next, alt + this.getHCost(next))
+						open.push(next)
+						open.sort(function (v1, v2) {
+							return f_cost.get(v1) - f_cost.get(v2)
+						})
 					}
-
-				/***/ result.push(new Step(StepType.IS_NEW, next, [...open], [...closed], null, null))
-				if (!open.includes(next) && !closed.includes(next)) {
-					cost.set(next, newCost)
-					cameFrom.set(next, current)
-					priorities.set(next, newCost + this.getHeuristic(next))
-					open.push(next)
-					open.sort(function (v1, v2) {
-						return priorities.get(v1) - priorities.get(v2)
-					})
-					/***/ result.push(new Step(StepType.OPEN_ADD, next, [...open], [...closed], null, null))
 				}
 			}
 		}
 		// no path found
-		/***/ result.push(new Step(StepType.NO_PATH, null, [...open], [...closed], null, null))
+		/***/ result.push(new Step(StepType.NO_PATH, null, [...open], [...visited], null, null))
 		return result
 	}
 
@@ -119,10 +116,25 @@ module.exports = class AStar {
 
 	// @return: calculated heuristic cost from vertex to _endVertex
 	// @params: vertex as Vertex-Object
-	getHeuristic(vertex) {
+	getHCost(vertex) {
 		let coords1 = Factory.idToCoords(vertex._id, this._gridWidth)
 		let coords2 = Factory.idToCoords(this._endVertex._id, this._gridWidth)
-		// 4 directions movement -> Manhattan method
-		return Math.abs(coords1.x - coords2.x) + Math.abs(coords1.y - coords2.y)
+		let dx = Math.abs(coords1.x - coords2.x)
+		let dy = Math.abs(coords1.y - coords2.y)
+		let result = 1
+
+		switch (this._formula) {
+			case 'EUCLIDEAN':
+				result = Math.sqrt(dx * dx + dy * dy)
+				break
+			case 'MANHATTAN':
+				result = dx + dy
+				break
+			default:
+				result = dx + dy
+		}
+
+		if (this._tiebreaking) result *= 1.5
+		return result
 	}
 }

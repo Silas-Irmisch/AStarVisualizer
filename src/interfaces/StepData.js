@@ -9,22 +9,20 @@ const StepType = require('./StepTypes.js')
 module.exports = class StepData {
 	//fields
 	_type
-	_vertex
+	_current
 	_open
-	_closed
+	_visited
 	_path
-	_cost
 
 	// constructing Object
 	// @params: type as string, open and closed and path as Array, cost as int
-	constructor(type, vertex, open, closed, path, cost) {
-		this._open = open
-		this._vertex = vertex
-		this._closed = closed
-		this._path = path
-		this._cost = cost
-
+	constructor(type, current, open, visited, path, cost) {
 		if (Object.values(StepType).indexOf(type) != -1) this._type = type
 		else throw 'EXCEPTION: type is invalid'
+
+		this._current = current
+		this._open = open
+		this._visited = visited
+		this._path = { vertices: path, cost: cost }
 	}
 }
