@@ -29,10 +29,8 @@ app.whenReady().then(() => {
 	// define window parameters
 	window = new BrowserWindow({
 		width: 1100,
-		minWidth: 1100,
-		height: 580,
-		minHeight: 580,
-		maxHeight: 580,
+		height: 500,
+		resizable: false,
 		fullscreenable: false,
 		webPreferences: {
 			// setting preload file to be used
@@ -66,6 +64,7 @@ app.whenReady().then(() => {
 				accelerator: 'F12'
 			})
 		)
+		window.resizable = true
 	}
 	Menu.setApplicationMenu(newMenu)
 })

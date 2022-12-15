@@ -10,11 +10,6 @@ body, html {
 	font-size: 14px;
 }
 
-a {
-	color: #70f3ec;
-	text-decoration: none;
-}
-
 .content {
 	display: flex;
 	gap: 40px;
