@@ -34,7 +34,8 @@
 					<h3 style="display:inline"> EDITING INTERFACE</h3> &emsp; <button id="toggle_editingmode" onclick="toggleEditingMode()">I'm done!</button>
 					<br><br>
 					<div style="display:flex">
-						<div id="edit_ui" style="flex:30%">
+						<div id="edit_ui" style="flex:25%">
+							<p>Cell Editing</p>
 							<input type="radio" id="w1" name="edit_elements" onclick="radioButtonChoice(this)" checked/>
 							<label id="w1_l" for="w1">1</label> <br>
 							<input type="radio" id="w2" name="edit_elements" onclick="radioButtonChoice(this)"/>
@@ -50,9 +51,19 @@
 							<input type="radio" id="end" name="edit_elements" onclick="radioButtonChoice(this)"/>
 							<label for="end">END</label> <br>
 						</div>
-						<div id="scale_ui" style="flex:70%">
+						<div id="scale_ui" style="flex:25%">
 							<p>Weight Scale</p>
 							<!-- Add Radio Buttons here via script -->
+						</div>
+						<div id="heur_ui" style="flex:50%">
+							<p>Path Cost Estimation</p>
+							<input type="radio" id="f_m" name="formula_choice" onclick="radioButtonChoice(this)" checked/>
+							<label for="f1">Manhattan Distance</label> <br>
+							<input type="radio" id="f_e" name="formula_choice" onclick="radioButtonChoice(this)"/>
+							<label for="f2">Euclidean Distance</label> <br> 
+							<br>
+							<input type="checkbox" id="tb" onchange="radioButtonChoice(this)">
+							<label for="t">Tie Breaking</label>
 						</div>
 					</div>
 				</div>

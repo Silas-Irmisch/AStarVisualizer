@@ -36,7 +36,7 @@ var _weights = Array(GRID_HEIGHT)
 for (let i = 0; i < GRID_HEIGHT; i++) _weights[i] = Array(GRID_WIDTH).fill(EDIT.WEIGHT1)
 // field with set weight values; initializing standard values 1,2,3,4
 var _weightScale = SCALE.PRESET1
-var _formulaChoice = null
+var _formulaChoice = 'MANHATTAN'
 var _tieBreaking = false
 
 // resulting data from AStar-Progress
@@ -128,6 +128,7 @@ function toggleEditingMode() {
 		document.getElementById('toggle_editingmode').innerHTML = "I'm done!"
 		document.getElementById('edit_ui').style.display = 'block'
 		document.getElementById('scale_ui').style.display = 'block'
+		document.getElementById('heur_ui').style.display = 'block'
 
 		// toggle editMode-field on/off
 		_editMode = !_editMode
@@ -141,6 +142,7 @@ function toggleEditingMode() {
 		document.getElementById('toggle_editingmode').innerHTML = "Let's edit!"
 		document.getElementById('edit_ui').style.display = 'none'
 		document.getElementById('scale_ui').style.display = 'none'
+		document.getElementById('heur_ui').style.display = 'none'
 
 		// toggle editMode-field on/off
 		_editMode = !_editMode
@@ -154,6 +156,9 @@ function radioButtonChoice(choiceHTMLObject) {
 	if (id == 'wall') _editChoice = EDIT.WALL
 	else if (id == 'start') _editChoice = EDIT.START
 	else if (id == 'end') _editChoice = EDIT.END
+	else if (id == 'f_m') _formulaChoice = 'MANHATTAN'
+	else if (id == 'f_e') _formulaChoice = 'EUCLIDEAN'
+	else if (id == 'tb') _tieBreaking = choiceHTMLObject.checked
 	else if (id[0] == 'w')
 		// --> weight 1-4
 		_editChoice = EDIT['WEIGHT' + id[1]]
@@ -164,6 +169,8 @@ function radioButtonChoice(choiceHTMLObject) {
 		for (let i = 1; i <= 4; i++) document.getElementById('w' + i + '_l').innerHTML = _weightScale[i - 1]
 	} else _editChoice = EDIT.NONE
 }
+
+//
 
 // called by Clicking on Cell in Editing Phase
 // colors cell according to chosen weight
