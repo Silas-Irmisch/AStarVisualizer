@@ -170,8 +170,6 @@ function radioButtonChoice(choiceHTMLObject) {
 	} else _editChoice = EDIT.NONE
 }
 
-//
-
 // called by Clicking on Cell in Editing Phase
 // colors cell according to chosen weight
 function setCellAttributes(cellName) {
