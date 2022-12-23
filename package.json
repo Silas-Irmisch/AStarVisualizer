@@ -1,5 +1,6 @@
 {
-	"name": "AStarVisualizer",
+	"name": "astarvisualizer",
+	"productName": "AStarVisualizer",
 	"version": "1.0.0",
 	"description": "bachelor_project: visualizing a*",
 	"main": "src/main.js",
@@ -13,11 +14,7 @@
 	"license": "",
 	"devDependencies": {
 		"@electron-forge/cli": "^6.0.4",
-		"@electron-forge/maker-squirrel": "^6.0.4",
 		"@electron-forge/maker-zip": "^6.0.4",
 		"electron": "^22.0.0"
-	},
-	"dependencies": {
-		"electron-squirrel-startup": "^1.0.0"
 	}
 }
