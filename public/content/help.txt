@@ -6,14 +6,16 @@ The weight values corresponding to these shades of gray are controlled by the "W
 You can also select the formula used to calculate the estimated cost of the path to the goal and you can activate "Tie Breaking", which means the algorithm will prefer to move towards the end instead of trying, which of the possible moves is the best first.
 Don't forget to place a Start and an End for the path you want the algorithm to find!
 
+Now you can click <strong>"Find a Path"</strong>!
+
 In the "Pseudo Code"-tab you can see what the algorithm is doing and you can control which step to show via the StepControls.
 <strong>">"</strong> is the next step, <strong>"<"</strong> the previous, <strong>"|<"</strong> jumps back to the beginning and with <strong>">|"</strong> you can skip to the end.
 Tip: You can hold <strong>">"</strong> and <strong>"<"</strong>!
 
 While looking at the algorithm working, you can see that cells of the grid will be colored in. Here is what the colors mean:
-<b style="color:#FF0000">RED</b>: This Vertex of the graph, that is represented by this cell, is currently beeing looked at by the algorithm.
-<b style="color:#00FF00">GREEN</b>: This cell was looked at and is marked as visited.
-<b style="color:#0000FF">BLUE</b>: This cell is currently in the QUEUE and scheduled to be looked at.
+<b style="color:#FF0000">RED</b>: The vertex of the graph, that is represented by this cell, is currently beeing looked at by the algorithm.
+<b style="color:#00FF00">GREEN</b>: This vertex was looked at and is marked as visited.
+<b style="color:#0000FF">BLUE</b>: This vertex is currently in the QUEUE and scheduled to be looked at.
 
 If there was a possible path to be found and you're displaying the last step, the path will be represented as a white line.
 You can redraw the grid and change anything you want in the "Edit"-tab!
