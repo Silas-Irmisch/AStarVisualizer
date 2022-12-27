@@ -25,10 +25,6 @@ body, html {
 	width: 600px;
 }
 
-.grid_container {
-	width: auto;
-}
-
 .right_container ul {
 	list-style: none;
 	padding-left: 10px;
