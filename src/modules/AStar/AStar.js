@@ -7,8 +7,8 @@
 const Grid = require('../Grid/Grid.js')
 const Graph = require('../Graph/Graph.js')
 const Factory = require('./GraphFactory.js')
-const Step = require('../../interfaces/StepData.js')
-const StepType = require('../../interfaces/StepTypes.js')
+const Step = require('../Steps/StepData.js')
+const StepType = require('../Steps/StepTypes.js')
 
 module.exports = class AStar {
 	//fields
