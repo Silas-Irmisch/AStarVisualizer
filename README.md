@@ -9,10 +9,10 @@ Tested for Windows 10 and MacOS.
 ### Executables
 
 Navigate to `/out/make/zip/` to find zip-Files, that contain executable builds.  
-If they are either not working or missing, you will need to follow Steps 1-3 of "Build Instructions".  
+If they are either not working or missing, you will need to follow Steps 1-3 of "Dev Environment Setup".  
 Then you can run `npm run make` in the terminal and the executables should get built.
 
-### Build Instructions
+### Dev Environment Setup
 
 (should work both on Windows and MacOS)
 
