@@ -15,6 +15,6 @@ module.exports = {
 	VISITED: 'VISITED',
 	NEW_COST: 'NEW_COST',
 	IS_GOOD: 'IS_GOOD',
-	OPEN_ADD: 'OPEN_ADD',
+	QUEUE_ADD: 'QUEUE_ADD',
 	NO_PATH: 'NO_PATH'
 }

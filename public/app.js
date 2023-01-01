@@ -335,7 +335,7 @@ function stepSwitchByDirection(direction) {
 
 // calls showStep to color Borders and calls colorPseudo depending on the Type of Step
 function stepController(step) {
-	showStep(step._open, step._visited, step._current)
+	showStep(step._queue, step._visited, step._current)
 	switch (step._type) {
 		case TYPE.INIT:
 			colorPseudo([0, 1, 2, 3, 4])
@@ -368,7 +368,7 @@ function stepController(step) {
 		case TYPE.IS_GOOD:
 			colorPseudo([17])
 			break
-		case TYPE.OPEN_ADD:
+		case TYPE.QUEUE_ADD:
 			colorPseudo([18, 19, 20, 21])
 			break
 		case TYPE.NO_PATH:
@@ -377,13 +377,13 @@ function stepController(step) {
 	}
 }
 
-// clears the grid and then colors borders of cells as OPEN, CLOSED or specific VERTEX
-function showStep(open, visited, current) {
+// clears the grid and then colors borders of cells as QUEUE, CLOSED or specific VERTEX
+function showStep(queue, visited, current) {
 	clearGrid()
-	if (open) {
-		for (let i = 0; i < open.length; i++) {
-			let coords = idToCoords(open[i]._id)
-			colorCellBorder(coords.x, coords.y, 'OPEN')
+	if (queue) {
+		for (let i = 0; i < queue.length; i++) {
+			let coords = idToCoords(queue[i]._id)
+			colorCellBorder(coords.x, coords.y, 'QUEUE')
 		}
 	}
 	if (visited) {

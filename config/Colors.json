@@ -4,7 +4,7 @@
 	"WEIGHT3": "#777777",
 	"WEIGHT4": "#555555",
 	"WALL": "#111111",
-	"OPEN": "#0000DD",
+	"QUEUE": "#0000DD",
 	"VISITED": "#00DD00",
 	"CURRENT": "#DD0000",
 	"PATH": "#FFFFFF"

@@ -41,50 +41,50 @@ module.exports = class AStar {
 	execute() {
 		/***/ let result = []
 
-		let open = [this._startVertex]
+		let queue = [this._startVertex]
 		let f_cost = new Map() // vertex -> priority as int
 		let g_cost = new Map() // vertex -> cost as int
 		let parent = new Map() // vertex -> vertex
-		let visited = new Set() // vertex -> boolean
+		let visited = new Set() // vertex
 
 		parent.set(this._startVertex, null)
 		g_cost.set(this._startVertex, 0)
-		/***/ result.push(new Step(StepType.INIT, null, [...open], [...visited], null, null))
+		/***/ result.push(new Step(StepType.INIT, null, [...queue], [...visited], null, null))
 
-		while (open.length > 0) {
-			/***/ result.push(new Step(StepType.WHILE, null, [...open], [...visited], null, null))
-			let current = open[0]
-			/***/ result.push(new Step(StepType.CURRENT, current, [...open], [...visited], null, null))
+		while (queue.length > 0) {
+			/***/ result.push(new Step(StepType.WHILE, null, [...queue], [...visited], null, null))
+			let current = queue[0]
+			/***/ result.push(new Step(StepType.CURRENT, current, [...queue], [...visited], null, null))
 
 			// path found -> early exit
-			/***/ result.push(new Step(StepType.IS_END, current, [...open], [...visited], null, null))
+			/***/ result.push(new Step(StepType.IS_END, current, [...queue], [...visited], null, null))
 			if (current == this._endVertex) {
 				let path = this.retracePath(parent)
-				/***/ result.push(new Step(StepType.PATH_FOUND, current, [...open], [...visited], path, g_cost.get(this._endVertex)))
+				/***/ result.push(new Step(StepType.PATH_FOUND, current, [...queue], [...visited], path, g_cost.get(this._endVertex)))
 				return result
 			}
-			/***/ result.push(new Step(StepType.SET_VISITED, current, [...open], [...visited], null, null))
-			open.splice(0, 1)
+			/***/ result.push(new Step(StepType.SET_VISITED, current, [...queue], [...visited], null, null))
+			queue.splice(0, 1)
 			visited.add(current)
 
-			/***/ result.push(new Step(StepType.FOR_NB, current, [...open], [...visited], null, null))
+			/***/ result.push(new Step(StepType.FOR_NB, current, [...queue], [...visited], null, null))
 			let neighbors = this._graph.getNeighborsOfVertex(current)
 			for (let index = 0; index < neighbors.length; index++) {
 				let next = neighbors[index]
 
-				/***/ result.push(new Step(StepType.VISITED, next, [...open], [...visited], null, null))
+				/***/ result.push(new Step(StepType.VISITED, next, [...queue], [...visited], null, null))
 				if (!visited.has(next)) {
-					/***/ result.push(new Step(StepType.NEW_COST, next, [...open], [...visited], null, null))
+					/***/ result.push(new Step(StepType.NEW_COST, next, [...queue], [...visited], null, null))
 					let alt = g_cost.get(current) + this.getMoveCost(current, next)
 
-					/***/ result.push(new Step(StepType.IS_GOOD, next, [...open], [...visited], null, null))
-					if (!open.includes(next) || alt < g_cost.get(next)) {
-						/***/ result.push(new Step(StepType.OPEN_ADD, next, [...open], [...visited], null, null))
+					/***/ result.push(new Step(StepType.IS_GOOD, next, [...queue], [...visited], null, null))
+					if (!queue.includes(next) || alt < g_cost.get(next)) {
+						/***/ result.push(new Step(StepType.QUEUE_ADD, next, [...queue], [...visited], null, null))
 						parent.set(next, current)
 						g_cost.set(next, alt)
 						f_cost.set(next, alt + this.getHCost(next))
-						open.push(next)
-						open.sort(function (v1, v2) {
+						queue.push(next)
+						queue.sort(function (v1, v2) {
 							return f_cost.get(v1) - f_cost.get(v2)
 						})
 					}
@@ -92,7 +92,7 @@ module.exports = class AStar {
 			}
 		}
 		// no path found
-		/***/ result.push(new Step(StepType.NO_PATH, null, [...open], [...visited], null, null))
+		/***/ result.push(new Step(StepType.NO_PATH, null, [...queue], [...visited], null, null))
 		return result
 	}
 
