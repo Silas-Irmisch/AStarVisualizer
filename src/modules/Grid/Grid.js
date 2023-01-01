@@ -1,4 +1,5 @@
-/** 	Grid Class of Graphs
+/**
+ * 		Grid Class of Graphs
  *  	Purpose: bachelor thesis
  *  	Author: silas irmisch
  */

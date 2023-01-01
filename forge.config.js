@@ -1,3 +1,7 @@
+/**
+ * 		configure electron-forge to package build app as zip
+ */
+
 module.exports = {
 	packagerConfig: {},
 	rebuildConfig: {},

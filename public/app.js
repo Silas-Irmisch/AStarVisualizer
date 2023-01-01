@@ -1,6 +1,7 @@
 /**
- * 		Main Script
- * 		Frontend Functions
+ * 		Main Frontend Script
+ * 		Purpose: bachelor thesis
+ *		Author: silas irmisch
  */
 
 // reading Settings from config files
@@ -97,6 +98,7 @@ for (let i = 0; i < Object.keys(SCALE).length; i++) {
 	newInput.addEventListener('click', event => {
 		radioButtonChoice(newInput)
 	})
+	// first scale is checked by default
 	if (i == 0) newInput.checked = true
 
 	let newLabel = document.createElement('label')

@@ -1,8 +1,14 @@
+<!-- 
+	Purpose: bachelor thesis
+	Author: silas irmisch 
+-->
+
 <!doctype html>
 <html lang="en-US">
 	<head>	
 		<meta charset="utf-8"/>
 		<title>A*</title>
+		<!-- Linking Stylesheets to this html -->
 		<link rel="stylesheet" type="text/css" href="./base.css"/>
 		<link rel="stylesheet" type="text/css" href="./grid.css"/>
 		<link rel="stylesheet" type="text/css" href="./content.css"/>
@@ -10,13 +16,14 @@
 	<body>
 		
 		<div class="content">
-			
+			<!-- Left Side (Grid) -->
 			<div class="left_container">
 				<br>
 				<canvas width="400", height="400"></canvas>
 				<div id="grid" class="grid"></div>
 			</div>
 	
+			<!-- Right Side (Pseudocode, A* Explanation, Edit, Help, Step Controls) -->
 			<div class="right_container">
 				
 				<!-- 
@@ -25,15 +32,18 @@
 				last access: 2023-01-01
 				-->
 				<ul>
+					<!-- Tabs -->
 					<li><button class="tab-button" onclick="selectTab('tab-pseudo')">Pseudo Code</button></li>
 					<li><button class="tab-button" onclick="selectTab('tab-explain')">A* Explanation</button></li>
 					<li><button class="tab-button selected" onclick="selectTab('tab-edit')">Edit</button></li>
 					<li><button class="tab-button" onclick="selectTab('tab-help')">Help</button></li>
 				</ul>
+				<!-- Tab Pages -->
 				<div class="tab" id="tab-pseudo" style="display:none"></div>
 				<div class="tab" id="tab-explain" style="display:none"></div>
 				<div class="tab" id="tab-help" style="display:none"></div>
 				<div class="tab" id="tab-edit">
+					<!-- Edit Tab's elements are defined in html, rest via script -->
 					<h3 style="display:inline"> EDITING INTERFACE</h3> &emsp; <button id="toggle_editingmode" onclick="toggleEditingMode()">I'm done!</button>
 					<br><br>
 					<div style="display:flex">
@@ -71,6 +81,7 @@
 					</div>
 				</div>
 			
+				<!-- Submit Button and Step Control Buttons -->
 				<button id="submit" class="astar_control" onclick="submitGraph()">FIND A PATH!</button>
 				<button id="prev" class="astar_control" onclick="stepSwitchByDirection('prev')" hidden><</button>
 				<button id="next" class="astar_control" onclick="stepSwitchByDirection('next')" hidden>></button>
@@ -81,5 +92,6 @@
 	</body>
 </html>
 
+<!-- Linking js scripts to this html -->
 <script src="./app.js" type="module"></script>
 <script src="./index.js"></script>

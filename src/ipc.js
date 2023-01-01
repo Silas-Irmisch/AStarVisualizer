@@ -1,5 +1,5 @@
 /**
- * 		Handlers for communication with frontend and Using AStar-functions
+ * 		Handlers for communication with frontend and using AStar
  * 		Purpose: bachelor thesis
  *  	Author: silas irmisch
  */

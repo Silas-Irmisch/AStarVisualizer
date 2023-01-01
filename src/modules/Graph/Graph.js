@@ -1,11 +1,12 @@
-/** 	Graph Class
+/**
+ * 		Graph Class
  *  	Purpose: bachelor thesis
  *  	Author: silas irmisch
  *  	Reference: ripphausen
  */
 
 /**
- *  	Methods for Adding and Removing Vertices and Edges have not been implemented.
+ *  	Methods for Adding and Removing Vertices and Edges have not been implemented, because they are not required for this app.
  */
 
 const V = require('./Vertex.js')

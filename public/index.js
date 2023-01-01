@@ -1,5 +1,7 @@
 /**
- * 		This script handles the tab content of index.html
+ * 		This script handles the tab content of text tabs of index.html
+ * 		Purpose: bachelor thesis
+ *		Author: silas irmisch
  */
 
 /* 
@@ -48,6 +50,7 @@ fetch('./content/help.txt')
 	})
 
 // @params: tabName in String
+// shows selected tab and hides all other tabs
 function selectTab(tabName) {
 	let tabs = document.getElementsByClassName('tab')
 	for (let i = 0; i < tabs.length; i++) {

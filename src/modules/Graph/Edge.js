@@ -1,4 +1,5 @@
-/** 	Edge Class of Graphs
+/**
+ * 		Edge Class of Graphs
  *  	Purpose: bachelor thesis
  *  	Author: silas irmisch
  *  	Reference: ripphausen

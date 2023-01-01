@@ -1,5 +1,5 @@
 /**
- * 		Class containing Info about one "step" of A*
+ * 		Class for Objects containing Info about one "step" of A*
  *  	Purpose: bachelor thesis
  *  	Author: silas irmisch
  */

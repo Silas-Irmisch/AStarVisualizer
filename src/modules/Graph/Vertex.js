@@ -1,4 +1,5 @@
-/** 	Vertex Class of Graphs
+/**
+ * 		Vertex Class of Graphs
  *  	Purpose: bachelor thesis
  *  	Author: silas irmisch
  *  	Reference: ripphausen
