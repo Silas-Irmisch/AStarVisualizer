@@ -1,1 +1,12 @@
-[ TODO ]
+If you need help understanding A*, this explanation should help.
+
+A* searches the shortest path between two vertices, by starting at one starting vertex and working forward towards the end vertex.
+The algorithm accomplishes this, by considering both the cost of the path to each one vertex, and the estimated cost of the path from that vertex to the end. It chooses to prioritize the vertex on the probable shortest path.
+
+Looking at the pseudocode, the QUEUE is a collection of vertices to be looked at next.
+This QUEUE is sorted by the aforementioned priority and when a vertex is looked at, the algorithm removes it from the QUEUE and sets its property "VISITED" to TRUE.
+
+Each neighbor-vertex of a vertex taken from the QUEUE is then examined, but only if it hasn't been visited yet.
+If this neighbor is either new or it's estimated total path cost is lower than the previously calculated one, this neighbor is added to the QUEUE.
+
+If a vertex taken from teh QUEUE is the end vertex, the loop is exited early and the path returned.
