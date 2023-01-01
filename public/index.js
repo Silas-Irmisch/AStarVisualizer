@@ -2,8 +2,13 @@
  * 		This script handles the tab content of index.html
  */
 
+/* 
+Source: reading text from file
+https://forum.freecodecamp.org/t/load-local-text-file-with-js/83063/4
+last access: 2023-01-01
+*/
+
 // fill PseudoCode-Tab with content
-// https://forum.freecodecamp.org/t/load-local-text-file-with-js/83063
 fetch('./content/pseudocode.txt')
 	.then(res => res.text())
 	.then(text => {

@@ -6,7 +6,11 @@
  *  	Author: silas irmisch
  */
 
-// QuickStart: https://medium.com/@voltx180/a-beginners-guide-to-electron-js-1679fd7b6e4f
+/* 
+Source: Initial Electron Setup
+https://medium.com/@voltx180/a-beginners-guide-to-electron-js-1679fd7b6e4f
+last access: 2023-01-01
+*/
 
 // require elements of electron
 const { app, BrowserWindow, Menu, MenuItem } = require('electron')
@@ -43,7 +47,11 @@ app.whenReady().then(() => {
 	window.loadFile(path.join(__dirname, '../public/index.html'))
 
 	// remove Electron MenuBar; re-add Reload and Developer Console if in dev mode
-	// https://dev.to/abulhasanlakhani/conditionally-appending-developer-tools-menuitem-to-an-existing-menu-in-electron-236k
+	/* 
+	Source: appending Menu to App if in dev-mode
+	https://dev.to/abulhasanlakhani/conditionally-appending-developer-tools-menuitem-to-an-existing-menu-in-electron-236k
+	last access: 2023-01-01
+	*/
 	let newMenu = Menu.buildFromTemplate([])
 	if (dev) {
 		newMenu.append(

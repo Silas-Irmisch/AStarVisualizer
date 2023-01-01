@@ -9,11 +9,19 @@
 .grid_cell {
 	font-size: 35px;
 	color: #FFFF00;
-	/* https://stackoverflow.com/a/4919231 */
+	/* 
+	Source: black border around text
+	https://stackoverflow.com/a/4919231 
+	last access: 2023-01-01
+	*/
 	text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
 	text-align: center;
 	line-height: 40px;
-	/* https://stackoverflow.com/a/2310809 */
+	/* 
+	Source: unselectable HTML text (S and E in grid)
+	https://stackoverflow.com/a/2310809 
+	last access: 2023-01-01
+	*/
 	-webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;
