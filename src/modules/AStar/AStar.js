@@ -42,8 +42,8 @@ module.exports = class AStar {
 		let result = []
 
 		let queue = [this._startVertex]
-		let f_cost = new Map() // vertex -> priority as int
-		let g_cost = new Map() // vertex -> cost as int
+		let f_cost = new Map() // vertex -> priority as number
+		let g_cost = new Map() // vertex -> cost as number
 		let parent = new Map() // vertex -> vertex
 		let visited = new Set() // vertex
 

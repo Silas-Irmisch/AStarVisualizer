@@ -10,7 +10,7 @@ module.exports = class Cell {
 	_y
 	_weight
 
-	// @params: x in int, y in int, weight in float (standard=1)
+	// @params: x as number, y as number, weight in number (standard=1)
 	constructor(x, y, weight = 1.0) {
 		this._x = x
 		this._y = y

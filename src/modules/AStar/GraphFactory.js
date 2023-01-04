@@ -69,8 +69,8 @@ module.exports = class GraphFactory {
 	}
 
 	// selects the greater of two weights to be the weight of the edge
-	// @return: weight as int
-	// @params: weight1 and weight2 as int
+	// @return: weight as number
+	// @params: weight1 and weight2 as number
 	static calculateEdgeWeight(weight1, weight2) {
 		return Math.max(weight1, weight2)
 	}
@@ -86,21 +86,21 @@ module.exports = class GraphFactory {
 		return weightSum / edges.length
 	}
 
-	// @params: x and y and width as int
-	// @return: int
+	// @params: x and y and width as number
+	// @return: number
 	static coordinatesToId(x, y, width) {
 		return Number(x) * Number(width) + Number(y)
 	}
 
-	// @params: id and width as int
-	// @return: object containing x and y as int
+	// @params: id and width as number
+	// @return: object containing x and y as number
 	static idToCoords(id, width) {
 		let y = id % width
 		let x = (id - y) / width
 		return { x: x, y: y }
 	}
 
-	// @params: vertices as Array of Vertex-Objects, id as int
+	// @params: vertices as Array of Vertex-Objects, id as number
 	// @return: Vertex-Object
 	static getVertexById(vertices, id) {
 		for (let i = 0; i < vertices.length; i++) {

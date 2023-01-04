@@ -12,7 +12,7 @@ module.exports = class Grid {
 	_height
 	_cells
 
-	// @params: width in int, height in int; both standard=10
+	// @params: width as number, height as number; both standard=10
 	constructor(weights, scale, width = 10, height = 10) {
 		this._width = width
 		this._height = height
@@ -28,7 +28,7 @@ module.exports = class Grid {
 	}
 
 	// @params: scale as IntArray (length=4), weightString (ex. "WEIGHT1", .., "WALL")
-	// @return: weight in int, -1 if not walkable
+	// @return: weight as number, -1 if not walkable
 	getWeight(scale, weightString) {
 		if (weightString == 'WALL') return -1
 		else return scale[weightString[6] - 1]

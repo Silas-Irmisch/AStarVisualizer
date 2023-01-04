@@ -477,8 +477,8 @@ function cellY(cellName) {
 	return cellName.split('_')[1].split('-')[1]
 }
 
-// @params: id and width as int
-// @return: object containing x and y as int
+// @params: id and width as number
+// @return: object containing x and y as number
 function idToCoords(id) {
 	let y = id % GRID_WIDTH
 	let x = (id - y) / GRID_WIDTH

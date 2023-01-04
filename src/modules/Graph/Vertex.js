@@ -9,7 +9,7 @@ module.exports = class Vertex {
 	// fields
 	_id
 
-	// @params: id as int
+	// @params: id as number
 	constructor(id) {
 		this._id = id
 	}

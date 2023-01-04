@@ -15,7 +15,7 @@ module.exports = class StepData {
 	_path
 
 	// constructing Object
-	// @params: type as string, queue and closed and path as Array, cost as int
+	// @params: type as string, queue and closed and path as Array, cost as number
 	constructor(type, current, queue, visited, path, cost) {
 		if (Object.values(StepType).indexOf(type) != -1) this._type = type
 		else throw 'EXCEPTION: type is invalid'

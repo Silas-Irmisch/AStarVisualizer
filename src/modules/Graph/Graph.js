@@ -17,13 +17,13 @@ module.exports = class Graph {
 	_isDirected
 	// bool. =true if directed graph
 	_vertexCount
-	// int. amount of vertices
+	// number. amount of vertices
 	_vertices
 	// array. collection of vertices
 	_adjList
 	// array of arrays. adjancency lists of vertices (indices are consistent)
 	_vertexIndex
-	// map, int to int. maps vertex-ids to their position index in adjList
+	// map, number to number. maps vertex-ids to their position index in adjList
 
 	// @params: isDirected as bool, vertices as Array, edges as Array
 	constructor(isDirected, vertices, edges) {
@@ -80,7 +80,7 @@ module.exports = class Graph {
 	}
 
 	// @return: Vertex from _vertices with id=param
-	// @params: id as int
+	// @params: id as number
 	getVertex(id) {
 		let vid = this._vertexIndex.get(id)
 		if (vid == null) return null
@@ -111,7 +111,7 @@ module.exports = class Graph {
 	}
 
 	// @return: adjacent vertices of vertex with id=param as Array
-	// @params: id as int
+	// @params: id as number
 	getNeighborsById(id) {
 		let vi = this._vertexIndex.get(id)
 		if (vi == null) return null
@@ -136,7 +136,7 @@ module.exports = class Graph {
 	}
 
 	// @return: incident edges of vertex with id=param as Array
-	// @params: id as int
+	// @params: id as number
 	getIncidentEdgesById(id) {
 		let vi = this._vertexIndex.get(id)
 		if (vi == null) return null
@@ -155,7 +155,7 @@ module.exports = class Graph {
 	}
 
 	// @return: edge(s) between vertex1 and vertex2 by ids
-	// @params: id1 and id2 as int
+	// @params: id1 and id2 as number
 	getEdgesByIds(id1, id2) {
 		let v2id = this._vertexIndex.get(id2)
 		if (v2id == null) return null
