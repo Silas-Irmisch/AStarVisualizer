@@ -53,7 +53,7 @@ module.exports = class AStar {
 
 		while (queue.length > 0) {
 			result.push(new Step(StepType.WHILE, null, [...queue], [...visited], null, null))
-			let current = queue[0]
+			let current = this.getVertexWithMinFCost(queue, f_cost)
 			result.push(new Step(StepType.CURRENT, current, [...queue], [...visited], null, null))
 
 			// path found -> early exit
@@ -64,7 +64,7 @@ module.exports = class AStar {
 				return result
 			}
 			result.push(new Step(StepType.SET_VISITED, current, [...queue], [...visited], null, null))
-			queue.splice(0, 1)
+			queue.splice(queue.indexOf(current), 1)
 			visited.add(current)
 
 			result.push(new Step(StepType.FOR_NB, current, [...queue], [...visited], null, null))
@@ -84,9 +84,6 @@ module.exports = class AStar {
 						g_cost.set(next, alt)
 						f_cost.set(next, alt + this.getHCost(next))
 						queue.push(next)
-						queue.sort(function (v1, v2) {
-							return f_cost.get(v1) - f_cost.get(v2)
-						})
 					}
 				}
 			}
@@ -136,5 +133,17 @@ module.exports = class AStar {
 
 		if (this._tiebreaking) result *= 1.5
 		return result
+	}
+
+	// @return: Vertex of queue with smallest f_cost
+	// @params: queue: Array and f_cost: Map(Vertex->number)
+	getVertexWithMinFCost(queue, f_cost) {
+		let min = queue[0]
+		for (let i = 1; i < queue.length; i++) {
+			if (f_cost.get(queue[i]) < f_cost.get(min)) {
+				min = queue[i]
+			}
+		}
+		return min
 	}
 }
