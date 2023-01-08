@@ -16,7 +16,7 @@ In the directory `/out/make/zip/` you can find zip-files containing the same exe
 #### Notes on MacOS Builds
 
 To run this app on macOS, you might have to give permissions.
-If your system warns you about an unverified developer, navigate to tze "security" section of your system preferences, and give the permission to run the app.
+If your system warns you about an unverified developer, navigate to the "security" section of your system preferences, and give the permission to run the app.
 The app should relaunch automatically, with a final warning popup that you can dismiss. If it doesn't relaunch, you can try running it again manually.
 
 ### Dev Environment Setup
